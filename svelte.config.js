@@ -10,7 +10,7 @@ const config = {
 	preprocess: [
 		sveltePreprocess({
 			scss: {
-				prependData: `@import 'src/styles/variables.scss';`
+				prependData: `@import 'src/style/app.scss';`
 			}
 		}),
 		vitePreprocess()],

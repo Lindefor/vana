@@ -28,14 +28,16 @@ function createWindow() {
 	mainWindow = new BrowserWindow({
 		width: mws.width,
 		height: mws.height,
-		backgroundColor: '#0e0f11',
+		backgroundColor: '#1C1C1E',
 		show: false,
 
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.cjs'),
 			nodeIntegration: true,
 			devTools: true
-		}
+		},
+		titleBarStyle: 'hiddenInset',
+		trafficLightPosition: { x: 15, y: 15 }
 	});
 
 	// Open the DevTools.
