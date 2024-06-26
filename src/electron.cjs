@@ -22,12 +22,15 @@ function loadDev(port) {
 function createWindow() {
 	let mws = ws({
 		defaultWidth: 1000,
-		defaultHeight: 800
+		defaultHeight: 800,
 	});
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		width: mws.width,
+		minWidth: 1000,
 		height: mws.height,
+		minHeight: 900,
+
 		backgroundColor: '#1C1C1E',
 		show: false,
 

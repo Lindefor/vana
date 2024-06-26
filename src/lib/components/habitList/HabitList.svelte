@@ -15,7 +15,7 @@
         display: flex;
         flex-direction: row;
         background-color: $darkModeDark;
-        border-left: 1px solid grey;
+        border-left: 1px solid #494949;
         border-right: 1px solid black;
         margin-top: -29px;
     }

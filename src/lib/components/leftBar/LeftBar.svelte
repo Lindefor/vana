@@ -1,13 +1,15 @@
 <!-- 
-    This is the shortcut component in the left bar of Vana
+    This is the left bar component of Vana
 -->
 
 <script lang="ts">
     import { LEFTBAR_WIDTH } from "$lib/constants";
+    import LeftBarShortcut from "./LeftBarShortcut.svelte";
+    import { shortcutStore } from "$lib/stores/shortcut"
 </script>
 
 <div class="leftBar" style="width:{LEFTBAR_WIDTH}px">
-    s
+    <LeftBarShortcut shortcuts={$shortcutStore}/>
 </div>
 
 <style lang="scss">
@@ -16,5 +18,6 @@
         flex-direction: row;
         margin-top: 10px;
         background-color: $darkModeDark;
+        height: 100vh;
     }
 </style>
