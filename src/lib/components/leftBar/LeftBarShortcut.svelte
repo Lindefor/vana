@@ -11,7 +11,7 @@
 <div class="shortcuts">
     {#each shortcuts as shortcut}
         <button class="shortcut">
-            <img src={shortcut.iconPath} alt="Shortcut image"/>
+            <img src={shortcut.iconPath} alt="Shortcut image" draggable="false"/>
         </button>
     {/each}
 </div>

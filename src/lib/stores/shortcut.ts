@@ -1,33 +1,37 @@
-import { get, writable } from "svelte/store";
-import type { ShortcutNode } from "$lib/types/shortcut";
-import { createShortcut } from "$lib/types/shortcut";
-
+import { get, writable } from 'svelte/store';
+import type { ShortcutNode } from '$lib/types/shortcut';
 
 const buildShortcutStore = () => {
-  const Home: ShortcutNode = createShortcut("Home", "HomeIcon.png", "TBD") 
-  const Settings: ShortcutNode = createShortcut("Settings", "SettingsIcon.png", "TBD") 
-  const Study: ShortcutNode = createShortcut("Study", "StudyIcon.png", "TBD") 
-  const startState: ShortcutNode[] = [Home, Settings, Study]
+    const startState: Record<string,ShortcutNode[]> = {"leftbar": [], "navbar": []} 
 
-  const { subscribe, set, update } = writable(startState);
+	const { subscribe, set, update } = writable(startState);
 
-  const methods = {
-    getShortcut(index: number) {
-        return get(shortcutStore)[index];
-    },
-    addShortcut(sc: ShortcutNode) {
-        update((scStore) => {
-            scStore.push(sc)
-            return scStore;
-        })
-    }
-  }
+	const methods = {
+        getLeftbarShortcut(index: number) {
+            return get(shortcutStore)["leftbar"][index]
+        },
+        addLeftbarShortcut(sc: ShortcutNode) {
+			update((scStore) => {
+				scStore["leftbar"].push(sc);
+				return scStore;
+			});
+		},
+        getNavbarShortcut(index: number) {
+            return get(shortcutStore)["navbar"][index]
+        },
+        addNavbarShortcut(sc: ShortcutNode) {
+			update((scStore) => {
+				scStore["navbar"].push(sc);
+				return scStore;
+			});
+		},
+	};
 
-  return {
-    subscribe,
-    set,
-    ...methods
-  }
+	return {
+		subscribe,
+		set,
+		...methods
+	};
 };
 
 export const shortcutStore = buildShortcutStore();
