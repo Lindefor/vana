@@ -25,6 +25,14 @@ const buildShortcutStore = () => {
 				return scStore;
 			});
 		},
+		setNavbarActive(name: string) {
+			update((scStore) => {
+				for (const shortcut of scStore["navbar"]) {
+					shortcut.active = shortcut.name === name;
+				}
+				return scStore;
+			});
+		}
 	};
 
 	return {

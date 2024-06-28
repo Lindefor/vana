@@ -4,13 +4,14 @@
 
 <script lang="ts">
     import type { ShortcutNode } from "$src/lib/types/shortcut"
+    import { shortcutStore } from "$lib/stores/shortcut"
     export let shortcuts: ShortcutNode[]
 </script>
 
 <div class="shortcuts">
     {#each shortcuts as shortcut}
-        <button class="shortcut">
-            <img src={shortcut.iconPath} alt="Shortcut image" draggable="false"/>
+        <button class="shortcut" on:click={() => shortcutStore.setNavbarActive(shortcut.name)}>
+            <img src={shortcut.iconPath} alt="{shortcut.name}" draggable="false"/>
         </button>
     {/each}
 </div>
@@ -21,11 +22,17 @@
         flex-direction: row;
         flex: 1;
         justify-content: space-between;
+
+        .shortcut {
+            &:not(:last-child) {
+                border-right: 1px solid black;
+                padding: 10px;
+            }
+        }
     }
 
     .shortcut {
         border: none;
-        border-right: 1px solid black;
         width: 100%;
         display: flex;
         align-items: center;

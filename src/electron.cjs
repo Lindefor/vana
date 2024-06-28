@@ -27,7 +27,7 @@ function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		width: mws.width,
-		minWidth: 1000,
+		minWidth: 900,
 		height: mws.height,
 		minHeight: 900,
 
@@ -46,7 +46,7 @@ function createWindow() {
 	// Open the DevTools.
 	if (isDev) {
 		loadDev(port);
-		mainWindow.webContents.openDevTools();
+		// mainWindow.webContents.openDevTools();
 	} else {
 		// mainWindow.removeMenu();
         loadURL(mainWindow);

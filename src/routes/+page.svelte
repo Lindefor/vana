@@ -48,7 +48,9 @@
     :global(body) {
 		margin: 0;
 		padding: 0;
-		font-family: 'Roboto', serif;
+		font-family: 'Roboto', sans-serif;
+        color: $fontColor;
 		overflow: hidden;
+        -webkit-font-smoothing: antialiased;
 	}
 </style>

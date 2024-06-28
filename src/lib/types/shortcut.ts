@@ -1,5 +1,3 @@
-
-
 /**
  * Represents a node in the shortcut tree.
  */
@@ -18,6 +16,11 @@ export interface ShortcutNode {
      * The path to the shortcut file.
      */
     shortcutPath: string;
+
+    /**
+     * The path to the shortcut file.
+     */
+    active: boolean;
 }
 
 /**
@@ -35,11 +38,12 @@ export type Shortcut = ShortcutNode;
  * const myShortcut: ShortcutNode = createShortcut("My Shortcut", "icon path", "shortcut path");
  * console.log(myShortcut.name); // Output: "My Shortcut"
  */
-export function createShortcut(name: string, icon: string, shortcut: string): ShortcutNode {
+export function createShortcut(name: string, icon: string, shortcut: string, active: boolean): ShortcutNode {
     return {
         name: name,
         iconPath: icon,
-        shortcutPath: shortcut
+        shortcutPath: shortcut,
+        active: active
     };
 }
 

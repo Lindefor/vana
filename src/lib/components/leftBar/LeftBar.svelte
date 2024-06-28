@@ -9,9 +9,9 @@
     import type { ShortcutNode } from "$src/lib/types/shortcut";
     import { createShortcut } from "$src/lib/types/shortcut";
 
-    const Home: ShortcutNode = createShortcut("Home", "HomeIcon.png", "TBD") 
-    const Settings: ShortcutNode = createShortcut("Settings", "SettingsIcon.png", "TBD") 
-    const Study: ShortcutNode = createShortcut("Study", "StudyIcon.png", "TBD") 
+    const Home: ShortcutNode = createShortcut("Home", "HomeIcon.png", "TBD", false) 
+    const Settings: ShortcutNode = createShortcut("Settings", "SettingsIcon.png", "TBD", false) 
+    const Study: ShortcutNode = createShortcut("Study", "StudyIcon.png", "TBD", false) 
     shortcutStore.addLeftbarShortcut(Home)
     shortcutStore.addLeftbarShortcut(Settings)
     shortcutStore.addLeftbarShortcut(Study)
