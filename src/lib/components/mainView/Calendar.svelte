@@ -6,15 +6,18 @@
     let dates: Record<string, Date[]> = {}
     let monthsFromNow: string[] = []
     const daysOfWeek = ["M", "T", "W", "T", "F", "S", "S"]
-
+    let currentDate = new Date();
+    let currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+    let endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     function generateDates() {
-        let currentDate = new Date();
-		let endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-		
-		let currentMonth = currentDate.toLocaleString('default', { month: 'long' });
         monthsFromNow.push(currentMonth)
 		dates[currentMonth] = [];
-		for (let i = currentDate.getDate(); i <= endOfMonth.getDate(); i++) {
+        let yest = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1);
+        console.log(yest.valueOf());
+        console.log(yest.getTime());
+        console.log((yest.getDate() < currentDate.getDate()));
+        
+		for (let i = 1; i <= endOfMonth.getDate(); i++) {
 			dates[currentMonth].push(new Date(currentDate.getFullYear(), currentDate.getMonth(), i));
 		}
 
@@ -39,6 +42,7 @@
 </script>
 
 <div class="months">
+    <div class="year">{currentDate.getFullYear()}</div>
     {#each monthsFromNow as month}
         <div class="month">
             <div class="monthName">
@@ -52,23 +56,45 @@
                 {/each}
             </div>
             <div class="days">
-                {#each dates[month] as day}
-                    {#if new Date().toDateString() !== day.toDateString()}
+                {#if month === currentMonth}
+                    {#each dates[month] as day}
+                        {#if currentDate.toLocaleDateString() > day.toLocaleDateString()}
+                            <div class="day" style="opacity:50%">
+                                {day.getDate()}
+                            </div>
+                        {:else if currentDate < day}
+                            <div class="day">
+                                {day.getDate()}
+                            </div>
+                        {:else}
+                            <div class="day" style="box-shadow: 0 4px 0 rgba(0,0,0,1);transform:translateY(-4px);">
+                                {day.getDate()}
+                            </div>
+                        {/if}
+                    {/each}
+                {:else}
+                    {#each dates[month] as day}
                         <div class="day">
                             {day.getDate()}
                         </div>
-                    {:else}
-                        <div class="day" style="box-shadow: 0 4px 0 rgba(0,0,0,1);transform:translateY(-4px);">
-                            {day.getDate()}
-                        </div>
-                    {/if}
-                {/each}
+                    {/each}
+                {/if}
             </div>
         </div>
     {/each}
 </div>
 
 <style lang="scss">
+
+    .year {
+        width: 100%;
+        font-size:24px;
+        font-weight: 500;
+        width: 100%;
+        height: fit-content;
+        -webkit-font-smoothing: antialiased; /* For WebKit (Safari, Chrome) */
+    }
+
     .months {
         display: flex;
         flex-direction: row;
@@ -88,7 +114,12 @@
         gap: 15px;
         background-color: $darkModeDark;
         box-shadow: inset 0 1px 2px black;
-        
+        transition: all 0.2s ease-in-out;
+    }
+
+    .month:hover {
+        border: 1px solid grey;
+        transform: scale(1.02);
     }
 
     .monthName {
@@ -136,8 +167,14 @@
         align-items: top;
         justify-content: center;
         background-color: $darkModeLight;
+        
         font-weight: 300;
         font-size: 12px;
         box-shadow: inset 0 1px 2px black;
+        transition: all 0.2s ease-in-out;
+    }
+    .day:hover {
+        border: 1px solid grey;
+        transform: translateY(-3px);
     }
 </style>
