@@ -5,12 +5,12 @@
 <script lang="ts">
     import type { ShortcutNode } from "$src/lib/types/shortcut"
     import { shortcutStore } from "$lib/stores/shortcut"
-    export let shortcuts: ShortcutNode[]
+    export let shortcuts: Record<string,ShortcutNode[]>
 </script>
 
 <div class="shortcuts">
-    {#each shortcuts as shortcut}
-        <button class="shortcut" on:click={() => shortcutStore.setNavbarActive(shortcut.name)}>
+    {#each shortcuts["navbar"] as shortcut}
+        <button class="shortcut active-{shortcut.active}" on:click={() => shortcutStore.setNavbarActive(shortcut.name)}>
             <img src={shortcut.iconPath} alt="{shortcut.name}" draggable="false"/>
         </button>
     {/each}
@@ -29,6 +29,10 @@
                 padding: 10px;
             }
         }
+    }
+
+    .active-true {
+        background: $darkModeDark !important;
     }
 
     .shortcut {

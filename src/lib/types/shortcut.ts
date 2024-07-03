@@ -1,4 +1,14 @@
 /**
+ * Represents the full shortcut tree.
+ */
+export interface ShortcutStore {
+    navBarActive: number;
+    leftBarActive: number;
+    shortCuts: Record<string, ShortcutNode[]>;
+}
+
+
+/**
  * Represents a node in the shortcut tree.
  */
 export interface ShortcutNode {

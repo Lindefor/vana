@@ -18,7 +18,7 @@
 </script>
 
 <div class="leftBar" style="width:{LEFTBAR_WIDTH}px">
-    <LeftBarShortcut shortcuts={$shortcutStore["leftbar"]}/>
+    <LeftBarShortcut shortcuts={$shortcutStore.shortCuts["leftbar"]}/>
 </div>
 
 <style lang="scss">

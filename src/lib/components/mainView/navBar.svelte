@@ -24,7 +24,7 @@
 </script>
 
 <div class="navigation">
-    <NavView shortcuts={$shortcutStore["navbar"]}/>
+    <NavView shortcuts={$shortcutStore.shortCuts}/>
 </div>
 
 <style lang="scss">
