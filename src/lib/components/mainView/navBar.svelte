@@ -8,10 +8,13 @@
     import { createShortcut } from "$src/lib/types/shortcut";
 	import { onMount } from "svelte";
     import NavView from "./navElement.svelte";
+    import CarlendarIcon from "$lib/icons/Calendar.svg?component";
+    import GraphsIcon from "$lib/icons/Graphs.svg?component";
+    import AddIcon from "$lib/icons/Add.svg?component";
 
-    const Calendar: ShortcutNode = createShortcut("Calendar", "CalendarIcon.png", "TBD", true) 
-    const Graphs: ShortcutNode = createShortcut("Graphs", "GraphIcon.png", "TBD", false) 
-    const Add: ShortcutNode = createShortcut("Add", "PlusIcon.png", "TBD", false) 
+    const Calendar: ShortcutNode = createShortcut("Calendar", CarlendarIcon, "TBD", true) 
+    const Graphs: ShortcutNode = createShortcut("Graphs", GraphsIcon, "TBD", false) 
+    const Add: ShortcutNode = createShortcut("Add", AddIcon, "TBD", false) 
     
     shortcutStore.addNavbarShortcut(Calendar)
     shortcutStore.addNavbarShortcut(Graphs)

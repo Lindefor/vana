@@ -43,7 +43,7 @@
 
 	.content {
         height: calc(100vh - 200px);
-        overflow: scroll;
+        overflow-y: scroll;
         padding: 20px;
 	}
     .content::-webkit-scrollbar {

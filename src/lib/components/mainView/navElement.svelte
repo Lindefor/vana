@@ -4,6 +4,7 @@
 
 <script lang="ts">
     import type { ShortcutNode } from "$src/lib/types/shortcut"
+    import AppIcon from "$lib/components/other/AppIcon.svelte";
     import { shortcutStore } from "$lib/stores/shortcut"
     export let shortcuts: Record<string,ShortcutNode[]>
 </script>
@@ -11,7 +12,7 @@
 <div class="shortcuts">
     {#each shortcuts["navbar"] as shortcut}
         <button class="shortcut active-{shortcut.active}" on:click={() => shortcutStore.setNavbarActive(shortcut.name)}>
-            <img src={shortcut.iconPath} alt="{shortcut.name}" draggable="false"/>
+            <AppIcon class=leftbarShortcut inactiveIcon={shortcut.iconPath} activeIcon={shortcut.iconPath} text=""/>
         </button>
     {/each}
 </div>

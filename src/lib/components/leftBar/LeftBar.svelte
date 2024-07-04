@@ -5,13 +5,16 @@
 <script lang="ts">
     import { LEFTBAR_WIDTH } from "$lib/constants";
     import LeftBarShortcut from "./LeftBarShortcut.svelte";
-    import { shortcutStore } from "$lib/stores/shortcut"
+    import { shortcutStore } from "$lib/stores/shortcut";
     import type { ShortcutNode } from "$src/lib/types/shortcut";
     import { createShortcut } from "$src/lib/types/shortcut";
+    import HomeIcon from "$lib/icons/Home.svg?component";
+    import SettingsIcon from "$lib/icons/Settings.svg?component";
+    import StudyIcon from "$lib/icons/Study.svg?component";
 
-    const Home: ShortcutNode = createShortcut("Home", "HomeIcon.png", "TBD", false) 
-    const Settings: ShortcutNode = createShortcut("Settings", "SettingsIcon.png", "TBD", false) 
-    const Study: ShortcutNode = createShortcut("Study", "StudyIcon.png", "TBD", false) 
+    const Home: ShortcutNode = createShortcut("Home", HomeIcon, "TBD", false) 
+    const Settings: ShortcutNode = createShortcut("Settings", SettingsIcon, "TBD", false) 
+    const Study: ShortcutNode = createShortcut("Study", StudyIcon, "TBD", false) 
     shortcutStore.addLeftbarShortcut(Home)
     shortcutStore.addLeftbarShortcut(Settings)
     shortcutStore.addLeftbarShortcut(Study)

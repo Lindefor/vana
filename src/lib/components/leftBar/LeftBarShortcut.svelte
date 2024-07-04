@@ -4,6 +4,7 @@
 
 <script lang="ts">
     import { LEFTBAR_WIDTH } from "$src/lib/constants";
+    import AppIcon from "$lib/components/other/AppIcon.svelte";
     import type { ShortcutNode } from "$src/lib/types/shortcut"
     export let shortcuts: ShortcutNode[]
 </script>
@@ -11,7 +12,7 @@
 <div class="shortcuts">
     {#each shortcuts as shortcut}
         <button class="shortcut">
-            <img src={shortcut.iconPath} alt="Shortcut image" draggable="false"/>
+            <AppIcon class="leftbarShortcut" inactiveIcon={shortcut.iconPath} activeIcon={shortcut.iconPath} text=""/>
         </button>
     {/each}
 </div>
