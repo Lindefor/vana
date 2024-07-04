@@ -67,7 +67,7 @@
                                 {day.getDate()}
                             </div>
                         {:else}
-                            <div class="day" style="box-shadow: 0 4px 0 rgba(0,0,0,1);transform:translateY(-4px);">
+                            <div class="day" style="box-shadow: 0 2px 0 rgba(0,0,0,1);transform:translateY(-6px);">
                                 {day.getDate()}
                             </div>
                         {/if}
@@ -108,19 +108,19 @@
         min-height: 360px;
         height:fit-content;
         flex: 0 1 380px;
-        border: 1px solid black;
         border-radius: 10px;
         padding: 30px;
         gap: 15px;
         background-color: $darkModeDark;
-        box-shadow: inset 0 1px 2px black;
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
     }
 
     .month:hover {
-        border: 1px solid grey;
-        transform: scale(1.02);
+        transform: scale(1.01);
     }
+
+    
 
     .monthName {
         font-size:20px;
@@ -170,11 +170,11 @@
         
         font-weight: 300;
         font-size: 12px;
-        box-shadow: inset 0 1px 2px black;
+        box-shadow: inset 0 0px 1px black;
         transition: all 0.2s ease-in-out;
     }
     .day:hover {
         border: 1px solid grey;
-        transform: translateY(-3px);
+        transform: translateY(-2px);
     }
 </style>

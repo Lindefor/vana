@@ -5,6 +5,7 @@
 <script lang="ts">
 	import NavBar from './navBar.svelte';
     import Calendar from './Calendar.svelte';
+    import Graph from './Graph.svelte';
     import { shortcutStore } from '$src/lib/stores/shortcut';
 
     $: activeView = $shortcutStore.navBarActive
@@ -17,6 +18,8 @@
 	<div class="content">
         {#if activeView === 0}
             <Calendar/>
+        {:else if activeView === 1}
+            <Graph/>
         {/if}
     </div>
 </div>
