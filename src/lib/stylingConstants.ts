@@ -1,0 +1,14 @@
+export const fontFamily = "'Roboto', sans-serif"
+export const fontColor = '#FFFFFF'
+export const darkModeDark = '#1C1C1E'
+export const darkModeLight = '#2C2C2E'
+export const warning = '#FF002F';
+export const good = '#00FF3C';
+export const graphRed = '#E74765'
+export const graphYellow = '#FFC107'
+export const graphGreen = '#28A745'
+export const graphBlue = '#007BFF'
+export const graphBrown = '#6b350f'
+export const graphWhite = '#FFFFFF';
+export const graphBlack = '#000000';
+export const graphGrey = '#6C757D';

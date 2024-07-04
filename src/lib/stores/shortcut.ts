@@ -1,33 +1,53 @@
-import { get, writable } from "svelte/store";
-import type { ShortcutNode } from "$lib/types/shortcut";
-import { createShortcut } from "$lib/types/shortcut";
-
+import { get, writable } from 'svelte/store';
+import type { ShortcutNode, ShortcutStore } from '$lib/types/shortcut';
 
 const buildShortcutStore = () => {
-  const Home: ShortcutNode = createShortcut("Home", "HomeIcon.png", "TBD") 
-  const Settings: ShortcutNode = createShortcut("Settings", "SettingsIcon.png", "TBD") 
-  const Study: ShortcutNode = createShortcut("Study", "StudyIcon.png", "TBD") 
-  const startState: ShortcutNode[] = [Home, Settings, Study]
+    const startState: ShortcutStore = {
+		navBarActive: 0,
+		leftBarActive: 0,
+		shortCuts: {"leftbar": [], "navbar": []} 
+	}
+	
+	const { subscribe, set, update } = writable(startState);
 
-  const { subscribe, set, update } = writable(startState);
+	const methods = {
+        getLeftbarShortcut(index: number) {
+            return get(shortcutStore).shortCuts["leftbar"][index]
+        },
+        addLeftbarShortcut(sc: ShortcutNode) {
+			update((scStore) => {
+				scStore.shortCuts["leftbar"].push(sc);
+				return scStore;
+			});
+		},
+        getNavbarShortcut(index: number) {
+            return get(shortcutStore).shortCuts["navbar"][index]
+        },
+        addNavbarShortcut(sc: ShortcutNode) {
+			update((scStore) => {
+				scStore.shortCuts["navbar"].push(sc);
+				return scStore;
+			});
+		},
+		setNavbarActive(name: string) {
+			update((scStore) => {
+				let index: number = 0
+				for (let i = 0; i < scStore.shortCuts["navbar"].length; i++) {
+					const shortcut = scStore.shortCuts["navbar"][i];
+					shortcut.active = shortcut.name === name;
+					index = shortcut.name === name ? i:index
+				}
+				scStore.navBarActive = index
+				return scStore;
+			});
+		}
+	};
 
-  const methods = {
-    getShortcut(index: number) {
-        return get(shortcutStore)[index];
-    },
-    addShortcut(sc: ShortcutNode) {
-        update((scStore) => {
-            scStore.push(sc)
-            return scStore;
-        })
-    }
-  }
-
-  return {
-    subscribe,
-    set,
-    ...methods
-  }
+	return {
+		subscribe,
+		set,
+		...methods
+	};
 };
 
 export const shortcutStore = buildShortcutStore();
