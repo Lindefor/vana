@@ -101,14 +101,6 @@
                                 size: 12,
                                 weight: 500,
                             },
-                            // callback:  (value: number, index: number, values: Object[]) => {
-                            //     console.log(value);
-                                
-                            //         const colors = [graphBlue, graphBrown, graphGreen, graphRed, graphYellow, graphBlack, graphWhite];
-                            //         return {
-                            //             color: "#007BFF"
-                            //         };
-                            //     }
                             color: (c) => {if (c["tick"]["label"] === todayName) return graphRed; else return Chart.defaults.color}
                         }
                     },

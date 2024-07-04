@@ -19,6 +19,5 @@
         border-right: 1px solid black;
         margin-top: -29px;
         flex: 1;
-        // width: 100%;
     }
 </style>
