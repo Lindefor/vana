@@ -1,3 +1,6 @@
+import type { ComponentType, SvelteComponent } from 'svelte'
+import type { SVGAttributes } from 'svelte/elements';
+
 /**
  * Represents the full shortcut tree.
  */
@@ -20,7 +23,7 @@ export interface ShortcutNode {
     /**
      * The path to the icon file for the shortcut.
      */
-    iconPath: string;
+    iconPath: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>;
     
     /**
      * The path to the shortcut file.
@@ -48,7 +51,7 @@ export type Shortcut = ShortcutNode;
  * const myShortcut: ShortcutNode = createShortcut("My Shortcut", "icon path", "shortcut path");
  * console.log(myShortcut.name); // Output: "My Shortcut"
  */
-export function createShortcut(name: string, icon: string, shortcut: string, active: boolean): ShortcutNode {
+export function createShortcut(name: string, icon: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>, shortcut: string, active: boolean): ShortcutNode {
     return {
         name: name,
         iconPath: icon,
