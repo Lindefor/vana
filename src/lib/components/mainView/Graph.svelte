@@ -21,9 +21,20 @@
 	plugins,
 	Chart,
   } from 'chart.js';
-	import { each } from 'chart.js/helpers';
+	
     let fontColor = Chart.defaults.color;
     let unmarkedHabits = ['Tvätta bilen', 'Häng Tvätt', 'Rensa rabatten', 'Så tomatfrön', 'Läkarbesök', 'Handla till landet', 'Åk till Inet', 'Sök stipendium', 'Avsluta prenumeration']
+    let displayedHabits: string[] = [];
+    import { onMount } from 'svelte';
+    import { fade } from 'svelte/transition';
+    onMount(() => {
+        unmarkedHabits.forEach((habit, index) => {
+            setTimeout(() => {
+                displayedHabits = [...displayedHabits, habit];
+            }, index * 400); // 500ms delay between each item
+        });
+    });
+    
     let today = new Date();
     let dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let todayName = dayNames[today.getDay()];
@@ -222,8 +233,8 @@
         <div class="snd">
             <h3 style="color:{fontColor};font-family:{Chart.defaults.font.family};">Unmarked Habits</h3>
             <div class="habits">
-                {#each unmarkedHabits as habit}
-                    <div class="habit">
+                {#each displayedHabits as habit}
+                    <div in:fade={{duration: 300}} class="habit">
                         <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit}/>
                     </div>
                 {/each}
