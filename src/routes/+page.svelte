@@ -52,5 +52,6 @@
         color: $fontColor;
 		overflow: hidden;
         -webkit-font-smoothing: antialiased;
+        user-select: none;
 	}
 </style>
