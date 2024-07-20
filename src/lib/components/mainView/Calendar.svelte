@@ -13,9 +13,6 @@
         monthsFromNow.push(currentMonth)
 		dates[currentMonth] = [];
         let yest = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1);
-        console.log(yest.valueOf());
-        console.log(yest.getTime());
-        console.log((yest.getDate() < currentDate.getDate()));
         
 		for (let i = 1; i <= endOfMonth.getDate(); i++) {
 			dates[currentMonth].push(new Date(currentDate.getFullYear(), currentDate.getMonth(), i));
