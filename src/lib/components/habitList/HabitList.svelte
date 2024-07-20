@@ -13,6 +13,7 @@
 
     let dragging: { startX: any; } | null = null;
     let listWidth = HABIT_LIST_WIDTH-60;
+    export let minimize = false;
     let searchFilter: string = "";
     // let hs: HabitDir;
     // $: hs = $habitSystem;
@@ -33,6 +34,15 @@
                 listWidth += dx;
             }
         }
+    }
+    $: listStyle = minimize ? '0' : HABIT_LIST_WIDTH;
+    function toggleListWidth() {
+        
+        // listWidth = 0;
+        console.log("NUDA");
+        
+        return minimize ? 0:100;
+        // wwidth = HABIT_LIST_WIDTH-60;
     }
 
     // function filterHabits(habbitSystem: HabitDir) {
@@ -68,7 +78,6 @@
     //     console.log(hs);
         
     // }
-
     onMount(() => {
         window.addEventListener('mousemove', drag);
         window.addEventListener('mouseup', stopDrag);
@@ -91,8 +100,9 @@
     
 </script>
 
-<div class="list">
+<div class="list" style="width:{listStyle}px">
     <div class="habitContainer" style="width:{listWidth}px;">
+        
         <div class="search"><AppIcon class="add" inactiveIcon={AddIcon} activeIcon={AddIcon} text=""/><input class="search-text" spellcheck="false" bind:value={searchFilter} placeholder="Search" on:input={handleSearchFilterChange}/></div>
         <div class="habits">
             <HabitDropDown habitSystem={$habitSystem}/>
@@ -108,7 +118,7 @@
         flex-direction: row;
         margin-top: -29px;
         border-left: 1px solid #494949;
-        // flex: 1;
+        transition: width 0.5s ease;
     }
     .habitContainer {
         display: flex;
