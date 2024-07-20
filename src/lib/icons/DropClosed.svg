@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+    width="12"
+    height="15"
+    viewBox="6 4 12 12"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="1"
+    stroke-linecap="square"
+    stroke-linejoin="bevel">
+  <path d="M9 18l6-6-6-6"/>
+</svg>

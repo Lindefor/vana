@@ -14,3 +14,7 @@ $graphBrown: #6b350f;
 $graphWhite: #FFFFFF;
 $graphBlack: #000000;
 $graphGrey: #6C757D;
+
+@mixin transition($time: 0.3s) {
+	transition: all $time ease-in-out;
+}

@@ -19,10 +19,10 @@
     shortcutStore.addNavbarShortcut(Calendar)
     shortcutStore.addNavbarShortcut(Graphs)
     shortcutStore.addNavbarShortcut(Add)    
-    console.log(2);
+    
     
     onMount(() => {
-        console.log("Hej")
+        
     })
 </script>
 

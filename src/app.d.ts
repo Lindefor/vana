@@ -9,6 +9,10 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		electron: any
+	}
 }
 
 export {};

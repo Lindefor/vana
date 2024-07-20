@@ -1,10 +1,13 @@
 <script lang="ts">
-    import type { ComponentType, SvelteComponent } from 'svelte'
+    import { type ComponentType, type SvelteComponent } from 'svelte'
+    import { fade, slide, scale } from 'svelte/transition';
 	import type { SVGAttributes } from 'svelte/elements';
+    import type { Habit } from '$src/lib/types/habits';
     export let inactiveIcon: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>;
     export let activeIcon: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>;
     export let text: string;
-    let active = false;
+    export let active: boolean = false;
+    let textable = text !== "";
 
     function onClick() {
         active = !active;
@@ -13,9 +16,27 @@
 
 <div class="icon">
     <button class={$$props.class} on:click={onClick}>
-        <svelte:component this={active ? activeIcon:inactiveIcon}></svelte:component>
+        {#if active && textable}
+            <div in:scale={{ duration: 600 }}>
+                <svelte:component this={activeIcon} />
+            </div>
+        {:else if active && !textable}
+            <div in:fade={{ duration: 600 }}>
+                <svelte:component this={activeIcon} />
+            </div>
+        {:else}
+            {#if textable}
+                <div in:scale={{ duration: 600 }}>
+                    <svelte:component this={inactiveIcon} />
+                </div>
+            {:else}
+                <div in:fade={{ duration: 600 }}>
+                    <svelte:component this={inactiveIcon} />
+                </div>
+            {/if}
+        {/if}
     </button>
-    {#if (text !== "")}
+    {#if (textable)}
         <div class="text">{text}</div>
     {/if}
 </div>
@@ -24,11 +45,40 @@
     .icon {
         display: flex;
         flex-direction: row;
-        gap: 20px;
+        gap: 5px;
+        @include transition(0.3s);
     }
 
     .text {
         margin-top: 5px;
+    }
+
+    .add {
+        background: none;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+
+    }
+
+    .add:hover {
+        transform: scale(1.2);
+        opacity: 50%;
+    }
+
+    .dropDown {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+        margin-left: -5.5px;
+    }
+
+    .dropDown:hover {
+        opacity: 50%;
     }
 
     .habitCheck {
@@ -38,6 +88,7 @@
         background: none;
         border: none;
         transition: all 0.3s ease-in-out;
+        cursor: pointer;
     }
 
     .habitCheck:hover {

@@ -13,9 +13,6 @@
         monthsFromNow.push(currentMonth)
 		dates[currentMonth] = [];
         let yest = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1);
-        console.log(yest.valueOf());
-        console.log(yest.getTime());
-        console.log((yest.getDate() < currentDate.getDate()));
         
 		for (let i = 1; i <= endOfMonth.getDate(); i++) {
 			dates[currentMonth].push(new Date(currentDate.getFullYear(), currentDate.getMonth(), i));
@@ -107,7 +104,7 @@
     .month {
         min-height: 360px;
         height:fit-content;
-        flex: 0 1 380px;
+        width: 100%;
         border-radius: 10px;
         padding: 30px;
         gap: 15px;
@@ -133,22 +130,22 @@
     }
 
     .days {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
         gap: inherit;
     }
 
     .weekDays {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
         gap: inherit;
     }
 
     .weekDay {
         display: flex;
         padding: 7px;
-        width: 25px;
-        height: 25px;
+        width: 40px;
+        height: 40px;
         border: 1px solid transparent;
         align-items: top;
         justify-content: center;
@@ -160,8 +157,8 @@
     .day {
         display: flex;
         padding: 7px;
-        width: 25px;
-        height: 25px;
+        width: 40px;
+        height: 40px;
         border: 1px solid black;
         border-radius: 10px;
         align-items: top;
