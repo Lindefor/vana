@@ -12,7 +12,7 @@
 	import { onDestroy, onMount } from "svelte";
 
     let dragging: { startX: any; } | null = null;
-    let listWidth = HABIT_LIST_WIDTH-60;
+    let listWidth = HABIT_LIST_WIDTH;
     export let minimize = false;
     let searchFilter: string = "";
     // let hs: HabitDir;
@@ -30,20 +30,13 @@
         if (dragging) {
             const dx = e.clientX - dragging.startX;
             dragging.startX = e.clientX;
-            if (listWidth + dx >= HABIT_LIST_WIDTH-60) {
+            if (listWidth + dx >= HABIT_LIST_WIDTH) {
                 listWidth += dx;
+                listStyle += dx;
             }
         }
     }
-    $: listStyle = minimize ? '0' : HABIT_LIST_WIDTH;
-    function toggleListWidth() {
-        
-        // listWidth = 0;
-        console.log("NUDA");
-        
-        return minimize ? 0:100;
-        // wwidth = HABIT_LIST_WIDTH-60;
-    }
+    $: listStyle = minimize ? 0 : HABIT_LIST_WIDTH;
 
     // function filterHabits(habbitSystem: HabitDir) {
     //     // if match, dont recursive call
@@ -100,7 +93,7 @@
     
 </script>
 
-<div class="list" style="width:{listStyle}px">
+<div class="list" style="width:{listStyle}px;">
     <div class="habitContainer" style="width:{listWidth}px;">
         
         <div class="search"><AppIcon class="add" inactiveIcon={AddIcon} activeIcon={AddIcon} text=""/><input class="search-text" spellcheck="false" bind:value={searchFilter} placeholder="Search" on:input={handleSearchFilterChange}/></div>
@@ -118,7 +111,6 @@
         flex-direction: row;
         margin-top: -29px;
         border-left: 1px solid #494949;
-        transition: width 0.5s ease;
     }
     .habitContainer {
         display: flex;
