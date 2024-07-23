@@ -160,7 +160,11 @@
                         weight: 500
                     }
                 }
-            }
+            },
+            tooltip: {
+                backgroundColor: darkModeLight,
+                displayColors: false,
+            },
         }
     }
 
