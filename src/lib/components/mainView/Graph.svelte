@@ -25,14 +25,26 @@
     let fontColor = Chart.defaults.color;
     let unmarkedHabits = ['Tvätta bilen', 'Häng Tvätt', 'Rensa rabatten', 'Så tomatfrön', 'Läkarbesök', 'Handla till landet', 'Åk till Inet', 'Sök stipendium', 'Avsluta prenumeration']
     let displayedHabits: string[] = [];
+    let doughnutGraphHeight: number = 0;
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
+
+    function updateHeight() {
+        console.log("resize");
+        
+        doughnutGraphHeight = document.querySelector('.fst')?.offsetHeight;
+    }
+
     onMount(() => {
         unmarkedHabits.forEach((habit, index) => {
             setTimeout(() => {
                 displayedHabits = [...displayedHabits, habit];
             }, index * 400); // 500ms delay between each item
         });
+        updateHeight(); // Initial update
+        window.addEventListener('resize', updateHeight);
+        
+        // console.log(document.querySelector('.fst canvas').height);
     });
     
     let today = new Date();
@@ -266,7 +278,7 @@
     <div class="full">
         <Line {data} options={options} />
     </div>
-    <div class="half">
+    <div class="half" style="height:{doughnutGraphHeight}px">
         <div class="fst">
             <Doughnut data={doughnutData} options={doughnutOptions} plugins= {[centerTextPlugin]}/>
         </div>
@@ -325,6 +337,9 @@
         padding: 20px;
         background-color: $darkModeDark;
         transition: all 0.3s ease-in-out;
+        height: fit-content;
+        position: relative;
+        aspect-ratio: 4/3;
     }
 
     .fst:hover {
@@ -334,8 +349,8 @@
 
     .snd {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        // align-items: center;
+        // justify-content: center;
         flex-direction: column;
         width: 44%;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
@@ -343,6 +358,7 @@
         padding: 20px;
         background-color: $darkModeDark;
         transition: all 0.3s ease-in-out;
+        // overflow: hidden;
     }
 
     .snd:hover {
