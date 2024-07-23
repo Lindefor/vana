@@ -35,9 +35,10 @@
 	.mainView {
 		display: flex;
 		flex-direction: column;
-		width: 950px;
+		width: 600px;
 		background-color: $darkModeLight;
 		margin-top: -29px;
+		flex: 1;
 	}
 
 	.fullscreen {

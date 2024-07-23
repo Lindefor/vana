@@ -7,7 +7,7 @@
     import AppIcon from '$lib/components/other/AppIcon.svelte';
     import Unmarked from '$lib/icons/Unmarked.svg?component';
     import Marked from '$lib/icons/Marked.svg?component';
-    import { graphBlue, graphBrown, graphGreen, graphRed, graphYellow, graphBlack, graphWhite, graphGrey, fontFamily, warning, good } from '$src/lib/stylingConstants';
+    import { graphBlue, graphBrown, graphGreen, graphRed, graphYellow, graphBlack, graphWhite, graphGrey, fontFamily, warning, good, darkModeLight, darkModeDark } from '$src/lib/stylingConstants';
     import {
     Chart as ChartJS,
     Title,
@@ -50,7 +50,7 @@
 			{
 				label: 'My First dataset',
 				fill: false,
-				lineTension: 0.3,
+				lineTension: 0.2,
 				backgroundColor: (c) => {
                     if (c["raw"] === firstMax) return good;
                     else if (c["raw"] === firstMin) return warning;
@@ -73,7 +73,7 @@
 			{
 				label: 'My Second dataset',
 				fill: false,
-				lineTension: 0.3,
+				lineTension: 0.2,
 				backgroundColor: (c) => {
                     if (c["raw"] === secondMax) return good;
                     else if (c["raw"] === secondMin) return warning;
@@ -98,6 +98,7 @@
 
     let options = {
         responsive: true,
+        devicePixelRatio: 2,
         scales: {
                     x: {
                         grid: {
@@ -149,8 +150,9 @@
                 position: 'bottom',
                 labels: {
                     padding: 20,
-                    boxWidth: 40,
-                    boxHeight: 2,
+                    boxWidth: 8,
+                    boxHeight: 8,
+                    usePointStyle: true,
                     textAlign: 'left',
                     font:  {
                         family: fontFamily,
@@ -163,21 +165,50 @@
     }
 
     let doughnutData = {
-        labels: ['Marked as Incompleted', 'Marked as Completed', 'Not marked'],
+        labels: ['Marked as Completed','Marked as Incompleted' , 'Not marked'],
         datasets: [
             {
             data: [300, 50, 100],
-            backgroundColor: [graphRed, graphGreen, graphGrey],
-            borderColor: graphWhite,
+            backgroundColor: [graphGreen, graphRed, graphGrey],
+            borderColor: 'none',
             borderWidth: 0.6,
-            hoverBackgroundColor: [graphRed, graphGreen, graphGrey],
+            backgroundColor: [graphGreen, graphRed, graphGrey],
             hoverBorderColor: [graphBlack],
-            hoverBorderDash: [0.3]
+            hoverBorderDash: [0.3],
+            cutout: '80%',
             },
         ],
     }
+    const centerTextPlugin = {
+    id: 'centerTextPlugin',
+    beforeDraw: function(chart) {
+    var width = chart.width,
+        height = chart.height-60,
+        ctx = chart.ctx;
 
+    ctx.restore();
+    var fontSize = ((height) / 114).toFixed(2);
+    ctx.font = `100 ${fontSize}em 'Roboto', sans-serif`;
+    ctx.textBaseline = "center";
+    ctx.fillStyle = fontColor;
+
+    let dataset = chart.data.datasets[0].data;
+
+    let total = dataset.reduce((acc, value) => acc + value, 0);
+    let markedAsComplete = dataset[0];
+
+    var text = `${(markedAsComplete/total*100).toFixed(1)}%`,
+        textX = Math.round((width - ctx.measureText(text).width) / 2),
+        textY = height / 2;
+
+    
+    ctx.fillText(text, textX, textY);
+    ctx.save();
+    }
+    };
+    
     let doughnutOptions = {
+        devicePixelRatio: 2,
         responsive: true,
         plugins: {
             title: {
@@ -196,8 +227,9 @@
                 position: 'bottom',
                 labels: {
                     padding: 20,
-                    boxWidth: 40,
-                    boxHeight: 4,
+                    boxWidth: 8,
+                    boxHeight: 8,
+                    usePointStyle: true,
                     textAlign: 'left',
                     font:  {
                         family: fontFamily,
@@ -205,6 +237,10 @@
                         weight: 500,
                     }
                 }
+            },
+            tooltip: {
+                backgroundColor: darkModeLight,
+                displayColors: false,
             },
         }
     }
@@ -228,11 +264,11 @@
     </div>
     <div class="half">
         <div class="fst">
-            <Doughnut data={doughnutData} options={doughnutOptions}/>
+            <Doughnut data={doughnutData} options={doughnutOptions} plugins= {[centerTextPlugin]}/>
         </div>
         <div class="snd">
             <h3 style="color:{fontColor};font-family:{Chart.defaults.font.family};">Unmarked Habits</h3>
-            <div class="habits">
+            <div class="habits" style="color:{fontColor};">
                 {#each displayedHabits as habit}
                     <div in:fade={{duration: 300}} class="habit">
                         <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit}/>
@@ -247,16 +283,21 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        // width: 100%;
+        // height: 100%;
     }
 
     .full {
-        height: fit-content;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
         padding: 20px;
         background-color: $darkModeDark;
         transition: all 0.3s ease-in-out;
-        height: 435px;
+        position: relative;
+        aspect-ratio: 16/9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .full:hover {
@@ -267,11 +308,13 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        height: fit-content;
-        height: 435px;
+        // height: 435px;
     }
 
     .fst {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 44%;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
@@ -286,6 +329,10 @@
 
 
     .snd {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
         width: 44%;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
@@ -308,7 +355,7 @@
     .habits {
         display: flex;
         flex-direction: column;
-        height: 80%;
+        // height: 80%;
         overflow: scroll;
         gap: 30px;
         padding: 20px;
