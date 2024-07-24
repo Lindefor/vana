@@ -4,7 +4,7 @@
 
 <script lang="ts">
     import { habitSystem } from "$lib/stores/habits";
-    import type { HabitDir } from "$src/lib/types/habits";
+    import type { Habit, HabitDir } from "$src/lib/types/habits";
     import HabitDropDown from "./HabitDropDown.svelte";
     import { HABIT_LIST_WIDTH } from "$lib/constants";
     import AppIcon from "../other/AppIcon.svelte";
@@ -12,10 +12,9 @@
 	import { onDestroy, onMount } from "svelte";
 
     let dragging: { startX: any; } | null = null;
-    let listWidth = HABIT_LIST_WIDTH-60;
+    let listWidth = HABIT_LIST_WIDTH;
+    export let minimize = false;
     let searchFilter: string = "";
-    // let hs: HabitDir;
-    // $: hs = $habitSystem;
 
     function startDrag(e: MouseEvent) {
         dragging = {startX: e.clientX};
@@ -29,11 +28,13 @@
         if (dragging) {
             const dx = e.clientX - dragging.startX;
             dragging.startX = e.clientX;
-            if (listWidth + dx >= HABIT_LIST_WIDTH-60) {
+            if (listWidth + dx >= HABIT_LIST_WIDTH) {
                 listWidth += dx;
+                listStyle += dx;
             }
         }
     }
+    $: listStyle = minimize ? 0 : HABIT_LIST_WIDTH;
 
     // function filterHabits(habbitSystem: HabitDir) {
     //     // if match, dont recursive call
@@ -68,7 +69,6 @@
     //     console.log(hs);
         
     // }
-
     onMount(() => {
         window.addEventListener('mousemove', drag);
         window.addEventListener('mouseup', stopDrag);
@@ -76,26 +76,26 @@
         window.electron.readHabits();
 
         window.electron.onLoadedHabits(({ habitsData, subDirs, habits }: { habitsData: Record<any,any>, subDirs: any[], habits: any[] }) => {
-            habitSystem.loadHabits(habitsData, subDirs, habits);
+            habitSystem.loadHabitSystem(habitsData);
         })
-
-        // window.electron.onLoadedHabit(({ name, completed, description }: { name: string, completed: boolean, description: string }) => {
-        //     habitSystem.updateHabit(name, completed, description);
-        // })
     })
     // onDestroy(() => {
     //         window.removeEventListener('mousemove', drag);
     //         window.removeEventListener('mouseup', stopDrag);
     // })  
+    function toggleHabitCompleted(event: CustomEvent) {
+        habitSystem.toggleHabitCompleted(event.detail.habit);
+    }
     
     
 </script>
 
-<div class="list">
+<div class="list" style="width:{listStyle}px;">
     <div class="habitContainer" style="width:{listWidth}px;">
+        
         <div class="search"><AppIcon class="add" inactiveIcon={AddIcon} activeIcon={AddIcon} text=""/><input class="search-text" spellcheck="false" bind:value={searchFilter} placeholder="Search" on:input={handleSearchFilterChange}/></div>
         <div class="habits">
-            <HabitDropDown habitSystem={$habitSystem}/>
+            <HabitDropDown habitSystem={$habitSystem} on:toggleHabit={(event) => {toggleHabitCompleted(event)}}/>
         </div> 
     </div>
     <div class="divider" role="button" tabindex="0" aria-label="Adjust Habit List size" on:mousedown={(e) => startDrag(e)}></div>
@@ -108,7 +108,6 @@
         flex-direction: row;
         margin-top: -29px;
         border-left: 1px solid #494949;
-        // flex: 1;
     }
     .habitContainer {
         display: flex;

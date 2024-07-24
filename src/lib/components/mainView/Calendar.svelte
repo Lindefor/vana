@@ -96,7 +96,7 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: flex-start;
         gap: 20px;
     }
@@ -104,7 +104,7 @@
     .month {
         min-height: 360px;
         height:fit-content;
-        width: 100%;
+        // width: 100%;
         border-radius: 10px;
         padding: 30px;
         gap: 15px;

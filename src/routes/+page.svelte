@@ -2,6 +2,7 @@
     import LeftBar from "$lib/components/leftBar/LeftBar.svelte";
     import HabitList from "$lib/components/habitList/HabitList.svelte";
     import MiddleView from "$lib/components/mainView/MainView.svelte";
+    let minimize = false;
 </script>
 
 <svelte:head>
@@ -13,8 +14,8 @@
     <div class="topBar">Vana</div>
     <div class="mainWrapper">
         <LeftBar />
-        <HabitList />
-        <MiddleView />
+        <HabitList minimize={minimize}/>
+        <MiddleView bind:minimizeLeftbar={minimize}/>
     </div>    
 </div>
 
