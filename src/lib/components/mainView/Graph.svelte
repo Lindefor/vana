@@ -4,9 +4,14 @@
 
 <script lang="ts">
 	import { Line, Doughnut } from 'svelte-chartjs';
+    import { flip } from 'svelte/animate';
+    import { habitSystem } from "$lib/stores/habits";
+    import type { HabitDir, Habit } from '$src/lib/types/habits';
     import AppIcon from '$lib/components/other/AppIcon.svelte';
     import Unmarked from '$lib/icons/Unmarked.svg?component';
     import Marked from '$lib/icons/Marked.svg?component';
+    import Add from '$lib/icons/Add.svg?component';
+    
     import { graphBlue, graphBrown, graphGreen, graphRed, graphYellow, graphBlack, graphWhite, graphGrey, fontFamily, warning, good, darkModeLight, darkModeDark } from '$src/lib/stylingConstants';
     import {
     Chart as ChartJS,
@@ -23,29 +28,65 @@
   } from 'chart.js';
 	
     let fontColor = Chart.defaults.color;
-    let unmarkedHabits = ['Tvätta bilen', 'Häng Tvätt', 'Rensa rabatten', 'Så tomatfrön', 'Läkarbesök', 'Handla till landet', 'Åk till Inet', 'Sök stipendium', 'Avsluta prenumeration']
-    let displayedHabits: string[] = [];
-    let doughnutGraphHeight: number = 0;
+    let displayedHabits: Habit[] = [];
+    let disabledItems: number[] = [];
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
+    let containerSize: number;
+    
 
-    function updateHeight() {
-        console.log("resize");
+    function fillHabits(h: HabitDir) {
+        let smallHabs: Habit[] = [];
         
-        doughnutGraphHeight = document.querySelector('.fst')?.offsetHeight;
+        h.habits.forEach(habit => {
+            if (!habit.completed) {
+                smallHabs.push(habit);
+            }
+        });
+        h.subDirs.forEach(subdir => {
+            smallHabs = smallHabs.concat(fillHabits(subdir));
+        });
+        
+        return smallHabs;
+    }
+
+    function sortHabits(habits: Habit[]) {
+        let sortedHabits = Object.values(habits ?? []).sort((a, b) => {
+        if (a.completed === false && b.completed === true) {
+            return -1;
+        } else if (a.completed === true && b.completed === false) {
+            return 1;
+        } else {
+            return 0;
+        }
+        });
+        return sortedHabits;
+    }
+
+    function updateHabits(hs: HabitDir, firstLoad: boolean) {
+        let habs = fillHabits(hs);
+        displayedHabits = [];
+        if (!firstLoad) {
+            habs.forEach((habit, index) => {
+                displayedHabits = sortHabits([...displayedHabits, habit]);
+            }); 
+        } else {
+            habs.forEach((habit, index) => {
+            setTimeout(() => {
+                displayedHabits = sortHabits([...displayedHabits, habit]);
+            }, index * 400);
+        }); 
+        }
+    }
+    $: updateHabits($habitSystem, false);
+
+    function toggleHabitCompleted(habit: Habit) {
+        habitSystem.toggleHabitCompleted(habit);
     }
 
     onMount(() => {
-        unmarkedHabits.forEach((habit, index) => {
-            setTimeout(() => {
-                displayedHabits = [...displayedHabits, habit];
-            }, index * 400); // 500ms delay between each item
-        });
-        updateHeight(); // Initial update
-        window.addEventListener('resize', updateHeight);
-        
-        // console.log(document.querySelector('.fst canvas').height);
-    });
+        updateHabits($habitSystem, true)
+    })
     
     let today = new Date();
     let dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -114,7 +155,7 @@
         scales: {
                     x: {
                         grid: {
-                            display: true,
+                            display: false,
                         },
                         border: {
                             dash: [10]
@@ -133,7 +174,7 @@
                             display: true,
                         },
                         border: {
-                            dash: [10]
+                            // dash: [10]
                         },
                         ticks: {
                             font: {
@@ -209,17 +250,17 @@
     ctx.fillStyle = fontColor;
 
     let dataset = chart.data.datasets[0].data;
-
+    dataset = dataset.filter((value, index) => !disabledItems.includes(index));
     let total = dataset.reduce((acc, value) => acc + value, 0);
-    let markedAsComplete = dataset[0];
+    let markedAsComplete = disabledItems.includes(0) ? 0:dataset[0];
 
     var text = `${(markedAsComplete/total*100).toFixed(1)}%`,
         textX = Math.round((width - ctx.measureText(text).width) / 2),
         textY = height / 2;
-
-    
-    ctx.fillText(text, textX, textY);
-    ctx.save();
+    if (height >= 185) {
+        ctx.fillText(text, textX, textY);
+        ctx.save();
+    }
     }
     };
     
@@ -252,6 +293,15 @@
                         size: 14,
                         weight: 500,
                     }
+                },
+                onClick: (_, legendItem, legend) => {
+                    legend.chart.toggleDataVisibility(legendItem.index);
+                    legend.chart.update();
+                    if (disabledItems.includes(legendItem.index)) {
+                        disabledItems = disabledItems.filter(item => item !== legendItem.index);
+                    } else {
+                        disabledItems = [...disabledItems, legendItem.index];
+                    }
                 }
             },
             tooltip: {
@@ -274,112 +324,139 @@
     
 </script>
 
-<div class="graphs">
-    <div class="full">
+<div class={containerSize <= 1300 ? "graphs":"graphs-large"} bind:offsetWidth={containerSize}>
+    <div class="item {containerSize <= 1030 ? "full-width":"half-width"}">
         <Line {data} options={options} />
     </div>
-    <div class="half" style="height:{doughnutGraphHeight}px">
-        <div class="fst">
-            <Doughnut data={doughnutData} options={doughnutOptions} plugins= {[centerTextPlugin]}/>
-        </div>
-        <div class="snd">
-            <h3 style="color:{fontColor};font-family:{Chart.defaults.font.family};">Unmarked Habits</h3>
-            <div class="habits" style="color:{fontColor};">
-                {#each displayedHabits as habit}
-                    <div in:fade={{duration: 300}} class="habit">
-                        <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit}/>
+    <div class="item half-width">
+        <Doughnut data={doughnutData} options={doughnutOptions} plugins= {[centerTextPlugin]}/>
+    </div>
+    <div class="item half-width">
+        <h3 style="color:{fontColor};font-family:{Chart.defaults.font.family};">Unmarked Habits</h3>
+        <div class="habits" style="color:{fontColor};">
+            {#if displayedHabits.length > 0}
+                {#each displayedHabits as habit (habit.id)}
+                    <div in:fade={{duration: 300}} animate:flip={{ duration: 300 }} class="habit">
+                        <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit.name} active={habit.completed} on:toggle={() => toggleHabitCompleted(habit)}/>
                     </div>
                 {/each}
-            </div>
+            {:else}
+                All habits completed, well done!
+            {/if}
         </div>
     </div>
+    <div class="item {containerSize <= 1030 ? "full-width":"half-width"}">
+        <Line {data} options={options} />
+    </div>
+    <div class="non-item {containerSize <= 1300 ? "full-width":"half-width"}">
+        <AppIcon class="largeAdd" inactiveIcon={Add} activeIcon={Add} text="Add new graph"/>
+    </div>
 </div>
+
 <style lang="scss">
+
     .graphs {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
-        // width: 100%;
-        // height: 100%;
+        overflow: auto;
+        padding: 10px;
     }
 
-    .full {
+    .graphs-large {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        overflow: auto;
+        padding: 10px;
+    }
+
+    .item {
+        background-color: $darkModeDark;
+        padding: 20px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
-        padding: 20px;
-        background-color: $darkModeDark;
-        transition: all 0.3s ease-in-out;
-        position: relative;
-        aspect-ratio: 16/9;
+        // position: relative;
+        box-sizing: border-box;
         display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .full:hover {
-        transform: scale(1.01);
-    }
-
-    .half {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        // height: 435px;
-    }
-
-    .fst {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 44%;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-        border-radius: 10px;
-        padding: 20px;
-        background-color: $darkModeDark;
-        transition: all 0.3s ease-in-out;
-        height: fit-content;
-        position: relative;
-        aspect-ratio: 4/3;
-    }
-
-    .fst:hover {
-        transform: scale(1.01);
-    }
-
-
-    .snd {
-        display: flex;
-        // align-items: center;
-        // justify-content: center;
         flex-direction: column;
-        width: 44%;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-        border-radius: 10px;
-        padding: 20px;
-        background-color: $darkModeDark;
-        transition: all 0.3s ease-in-out;
-        // overflow: hidden;
+        align-items: center;
+        justify-content: center;
+        @include transition();
     }
 
-    .snd:hover {
+    .non-item {
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        // position: relative;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        @include transition();
+    }
+
+    .non-item:hover {
         transform: scale(1.01);
+        border: 1px solid rgba(0, 170, 255, 0.3);
+    }
+
+    .item:hover {
+        transform: scale(1.01);
+    }
+
+    .full-width {
+        // padding: 20px;
+        position: relative;
+        grid-column: span 2;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+    }
+
+    .half-width {
+        position: relative;
+        // padding: 20px;
+        grid-column: span 1;
+        aspect-ratio: 4/3;
+        overflow: hidden;
     }
 
     h3 {
         display: flex;
         margin-top: 0px;
-        justify-content: center;
+        // justify-content: center;
         user-select: none;
+        align-items:flex-start;
+        justify-content: flex-start;
     }
 
     .habits {
         display: flex;
         flex-direction: column;
-        // height: 80%;
+        align-items:flex-start;
+        justify-content: flex-start;
         overflow: scroll;
         gap: 30px;
-        padding: 20px;
         user-select: none;
+        width: 80%;
+    }
+    ::-webkit-scrollbar {
+    width: 5px; 
+    height: 8px; 
+}
+    ::-webkit-scrollbar-track {
+    background-color: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+    background-color: $darkModeLight; 
+    border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-corner {
+    background: transparent;
     }
 
 </style>

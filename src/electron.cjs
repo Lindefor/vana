@@ -5,8 +5,6 @@ const serve = require('electron-serve');
 const ws = require('electron-window-state');
 const { initIPC } = require('./electron-utility/ipc.cjs');
 const { createHabitDirectories } = require('./electron-utility/helpers.cjs');
-// const fs = require('fs');
-// try { require("electron-reloader")(module); } catch {}
 
 const port = process.env.PORT || 3000;
 const isDev = !app.isPackaged || process.env.NODE_ENV == 'development';

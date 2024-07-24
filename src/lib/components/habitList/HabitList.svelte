@@ -4,7 +4,7 @@
 
 <script lang="ts">
     import { habitSystem } from "$lib/stores/habits";
-    import type { HabitDir } from "$src/lib/types/habits";
+    import type { Habit, HabitDir } from "$src/lib/types/habits";
     import HabitDropDown from "./HabitDropDown.svelte";
     import { HABIT_LIST_WIDTH } from "$lib/constants";
     import AppIcon from "../other/AppIcon.svelte";
@@ -15,8 +15,6 @@
     let listWidth = HABIT_LIST_WIDTH;
     export let minimize = false;
     let searchFilter: string = "";
-    // let hs: HabitDir;
-    // $: hs = $habitSystem;
 
     function startDrag(e: MouseEvent) {
         dragging = {startX: e.clientX};
@@ -78,17 +76,16 @@
         window.electron.readHabits();
 
         window.electron.onLoadedHabits(({ habitsData, subDirs, habits }: { habitsData: Record<any,any>, subDirs: any[], habits: any[] }) => {
-            habitSystem.loadHabits(habitsData, subDirs, habits);
+            habitSystem.loadHabitSystem(habitsData);
         })
-
-        // window.electron.onLoadedHabit(({ name, completed, description }: { name: string, completed: boolean, description: string }) => {
-        //     habitSystem.updateHabit(name, completed, description);
-        // })
     })
     // onDestroy(() => {
     //         window.removeEventListener('mousemove', drag);
     //         window.removeEventListener('mouseup', stopDrag);
     // })  
+    function toggleHabitCompleted(event: CustomEvent) {
+        habitSystem.toggleHabitCompleted(event.detail.habit);
+    }
     
     
 </script>
@@ -98,7 +95,7 @@
         
         <div class="search"><AppIcon class="add" inactiveIcon={AddIcon} activeIcon={AddIcon} text=""/><input class="search-text" spellcheck="false" bind:value={searchFilter} placeholder="Search" on:input={handleSearchFilterChange}/></div>
         <div class="habits">
-            <HabitDropDown habitSystem={$habitSystem}/>
+            <HabitDropDown habitSystem={$habitSystem} on:toggleHabit={(event) => {toggleHabitCompleted(event)}}/>
         </div> 
     </div>
     <div class="divider" role="button" tabindex="0" aria-label="Adjust Habit List size" on:mousedown={(e) => startDrag(e)}></div>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { type ComponentType, type SvelteComponent } from 'svelte'
+    import { createEventDispatcher } from 'svelte';
     import { fade, slide, scale } from 'svelte/transition';
 	import type { SVGAttributes } from 'svelte/elements';
     import type { Habit } from '$src/lib/types/habits';
@@ -8,9 +9,11 @@
     export let text: string;
     export let active: boolean = false;
     let textable = text !== "";
+    const dispather = createEventDispatcher();
 
     function onClick() {
         active = !active;
+        dispather('toggle', { active })
     }
 </script>
 
@@ -99,6 +102,13 @@
     .leftbarShortcut {
         background: none;
         border: none;
+    }
+
+    .largeAdd {
+        background: none;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
     }
 
 </style>

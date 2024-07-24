@@ -15,14 +15,17 @@
     import Marked from '$lib/icons/Marked.svg?component';
     import DropClosed from '$lib/icons/DropClosed.svg?component';
     import DropOpened from '$lib/icons/DropOpened.svg?component';
-	
+    import { habitSystem as h} from "$src/lib/stores/habits";
+    import { createEventDispatcher } from 'svelte';
 
+	
+    const dispather = createEventDispatcher();
     export let habitSystem: HabitDir;
     let activeDirs: Record<string,boolean> = {}
     let sortedHabits: Habit[] = [];
     let randomNumber = Math.floor(Math.random() * 100);
     
-    function sortHabits (habits: Habit[]) {
+    function sortHabits(habits: Habit[]) {
         let sortedHabits = Object.values(habits ?? []).sort((a, b) => {
         if (a.completed === false && b.completed === true) {
             return -1;
@@ -37,6 +40,17 @@
     $: {
         sortedHabits = sortHabits(habitSystem.habits);
     }
+
+    function updateHabit(event: CustomEvent, habit: Habit) {
+        dispather('toggleHabit', { habit })
+    }
+
+    function selfToggle(event: CustomEvent) {
+        let habit = event.detail.habit;
+        dispather('toggleHabit', { habit })
+    }
+
+
     
 </script>
 
@@ -46,14 +60,15 @@
     {#if activeDirs[habitDir.id]}
         <div class="habitDir">
             <div class="dirContainer" in:fade={{ duration: 1000, delay: index*400 }}>
-                <HabitDropDown habitSystem={habitDir}/>
+                <HabitDropDown habitSystem={habitDir} on:toggleHabit={(event) => {selfToggle(event)}}/>
             </div>
         </div>
     {/if}
 {/each}
 {#each sortedHabits as habit, index (habit.id)}
     <div class="habit" in:fade={{ duration: 1000, delay: index*400 }} animate:flip={{ duration: 300 }}>
-        <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit.name} bind:active={habit.completed}/>
+        <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit.name} active={habit.completed} on:toggle={(event) => updateHabit(event, habit)}/>
+        <button on:click={h.logAllCompleted}>HoverToMod</button>
     </div>
 {/each}
 </div>
