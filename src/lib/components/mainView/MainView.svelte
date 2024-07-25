@@ -8,7 +8,7 @@
     import RightArrow from '$lib/icons/RightArrow.svg?component';
 	import NavBar from './navBar.svelte';
     import Calendar from './Calendar.svelte';
-    import Graph from './Graph.svelte';
+    import Graph from './Graph/Graph.svelte';
     import { shortcutStore } from '$src/lib/stores/shortcut';
 	export let minimizeLeftbar = false;
     $: activeView = $shortcutStore.navBarActive

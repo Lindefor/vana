@@ -3,6 +3,7 @@ export interface Habit {
 	name: string;
 	completed: boolean;
 	description: string;
+	deadline: string; 
 }
 
 export interface HabitDir {
