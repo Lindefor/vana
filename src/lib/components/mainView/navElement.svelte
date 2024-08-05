@@ -12,7 +12,10 @@
 <div class="shortcuts">
     {#each shortcuts["navbar"] as shortcut}
         <button class="shortcut active-{shortcut.active}" on:click={() => shortcutStore.setNavbarActive(shortcut.name)}>
-            <AppIcon class=leftbarShortcut inactiveIcon={shortcut.iconPath} activeIcon={shortcut.iconPath} text=""/>
+            <AppIcon class=leftbarShortcut inactiveIcon={shortcut.inactiveIconPath} activeIcon={shortcut.iconPath} text="" bind:active={shortcut.active}/>
+            {#if shortcut.name !== "Add"}
+            <div class="shortcut-text-{shortcut.active}">{shortcut.name}</div>    
+            {/if}
         </button>
     {/each}
 </div>
@@ -23,17 +26,12 @@
         flex-direction: row;
         flex: 1;
         justify-content: space-between;
-
-        .shortcut {
-            &:not(:last-child) {
-                border-right: 1px solid black;
-                padding: 10px;
-            }
-        }
+        height: 100px;
     }
 
     .active-true {
-        background: $darkModeDark !important;
+        box-shadow: 0px 15px 10px -15px $graphRed;
+        transform: translateY(-3px);
     }
 
     .shortcut {
@@ -42,17 +40,19 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #29292B;
+        flex-direction: column;
+        background-color: transparent;
         padding: 0;
         cursor: pointer;
+        @include transition()
     }
 
     .shortcut:hover {
-        box-shadow: inset 0 0.8px 0.8px black;
+        transform: translateY(-3px);
+        filter: drop-shadow(7px 5px 3px #000000);
     }
 
     .shortcut:active {
-        box-shadow: inset 0 1px 2px black;
         transform: translateY(0.5px);
     }
 
@@ -60,5 +60,15 @@
         width: 60px;
         height: 60px;
         object-fit: cover;
+    }
+
+    .shortcut-text-false {
+        color: grey;
+        font-size: 14px;
+    }
+
+    .shortcut-text-true {
+        color: white;
+        font-size: 14px;
     }
 </style>

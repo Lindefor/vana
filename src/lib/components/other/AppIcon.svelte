@@ -10,9 +10,23 @@
     export let active: boolean = false;
     let textable = text !== "";
     const dispather = createEventDispatcher();
-
+    
     function onClick() {
-        active = !active;
+        switch (active) {
+            case false:
+                console.log("Set trye");
+                console.log(active);
+                
+                active = true;
+                console.log(active);
+                
+                break;
+            default:
+            console.log("Do naught");
+                break;
+        }
+        console.log("SYUY");
+        
         dispather('toggle', { active })
     }
 </script>
@@ -24,7 +38,7 @@
                 <svelte:component this={activeIcon} />
             </div>
         {:else if active && !textable}
-            <div in:fade={{ duration: 600 }}>
+            <div>
                 <svelte:component this={activeIcon} />
             </div>
         {:else}
@@ -33,7 +47,7 @@
                     <svelte:component this={inactiveIcon} />
                 </div>
             {:else}
-                <div in:fade={{ duration: 600 }}>
+                <div>
                     <svelte:component this={inactiveIcon} />
                 </div>
             {/if}
@@ -50,6 +64,8 @@
         flex-direction: row;
         gap: 5px;
         @include transition(0.3s);
+        cursor: pointer;
+        pointer-events: auto;
     }
 
     .text {
@@ -60,7 +76,6 @@
         background: none;
         border: none;
         transition: all 0.3s ease-in-out;
-        cursor: pointer;
 
     }
 
@@ -76,7 +91,6 @@
         background: none;
         border: none;
         transition: all 0.3s ease-in-out;
-        cursor: pointer;
         margin-left: -5.5px;
     }
 
@@ -91,7 +105,6 @@
         background: none;
         border: none;
         transition: all 0.3s ease-in-out;
-        cursor: pointer;
     }
 
     .habitCheck:hover {
@@ -108,7 +121,6 @@
         background: none;
         border: none;
         transition: all 0.3s ease-in-out;
-        cursor: pointer;
     }
 
 </style>

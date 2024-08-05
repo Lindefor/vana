@@ -6,12 +6,11 @@
 </script>
 
 <svelte:head>
-    <title>Vana</title>
     <meta name="noMetaName" content="Vana Demo App" />
 </svelte:head>
 
 <div class="wrapper">
-    <div class="topBar">Vana</div>
+    <div class="topBar"></div>
     <div class="mainWrapper">
         <LeftBar />
         <HabitList minimize={minimize}/>
