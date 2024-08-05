@@ -26,6 +26,10 @@ export interface ShortcutNode {
     iconPath: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>;
     
     /**
+     * The path to the icon file for the inactive shortcut.
+     */
+    inactiveIconPath: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>;
+    /**
      * The path to the shortcut file.
      */
     shortcutPath: string;
@@ -51,10 +55,11 @@ export type Shortcut = ShortcutNode;
  * const myShortcut: ShortcutNode = createShortcut("My Shortcut", "icon path", "shortcut path");
  * console.log(myShortcut.name); // Output: "My Shortcut"
  */
-export function createShortcut(name: string, icon: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>, shortcut: string, active: boolean): ShortcutNode {
+export function createShortcut(name: string, icon: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>, inactiveIcon: ComponentType<SvelteComponent<SVGAttributes<SVGSVGElement>, any, any>>, shortcut: string, active: boolean): ShortcutNode {
     return {
         name: name,
         iconPath: icon,
+        inactiveIconPath: inactiveIcon,
         shortcutPath: shortcut,
         active: active
     };

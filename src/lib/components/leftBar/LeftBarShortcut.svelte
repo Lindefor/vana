@@ -12,7 +12,7 @@
 <div class="shortcuts">
     {#each shortcuts as shortcut}
         <button class="shortcut">
-            <AppIcon class="leftbarShortcut" inactiveIcon={shortcut.iconPath} activeIcon={shortcut.iconPath} text=""/>
+            <AppIcon class="leftbarShortcut" inactiveIcon={shortcut.iconPath} activeIcon={shortcut.iconPath} text="" bind:active={shortcut.active}/>
         </button>
     {/each}
 </div>

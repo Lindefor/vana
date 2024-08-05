@@ -55,7 +55,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-        border-bottom: 1px solid black;
 	}
 
 	.content {
