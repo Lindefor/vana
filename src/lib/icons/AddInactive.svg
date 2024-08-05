@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-    width="45"
-    height="45"
+    width="28"
+    height="28"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#ffffff"
+    stroke="#6C757D"
     stroke-width="1"
     stroke-linecap="square"
     stroke-linejoin="bevel">
-  <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7"/>
-  <path d="M15 7h6v6"/>
+  <line x1="12" y1="5" x2="12" y2="19"></line>
+  <line x1="5" y1="12" x2="19" y2="12"></line>
 </svg>
