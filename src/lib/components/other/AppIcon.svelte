@@ -12,21 +12,7 @@
     const dispather = createEventDispatcher();
     
     function onClick() {
-        switch (active) {
-            case false:
-                console.log("Set trye");
-                console.log(active);
-                
-                active = true;
-                console.log(active);
-                
-                break;
-            default:
-            console.log("Do naught");
-                break;
-        }
-        console.log("SYUY");
-        
+        active = !active;
         dispather('toggle', { active })
     }
 </script>

@@ -62,10 +62,28 @@
                         {:else if currentDate < day}
                             <div class="day">
                                 {day.getDate()}
+                                {#if Math.random() < 0.4}
+                                    <div class="circle complete"></div>    
+                                {/if}
+                                {#if Math.random() < 0.4}
+                                    <div class="circle incomplete"></div>
+                                {/if}
+                                {#if Math.random() < 0.4}
+                                    <div class="circle unmarked"></div>
+                                {/if}
                             </div>
                         {:else}
                             <div class="day" style="box-shadow: 0 2px 0 rgba(0,0,0,1);transform:translateY(-6px);">
                                 {day.getDate()}
+                                {#if Math.random() < 0.4}
+                                    <div class="circle complete"></div>    
+                                {/if}
+                                {#if Math.random() < 0.4}
+                                    <div class="circle incomplete"></div>
+                                {/if}
+                                {#if Math.random() < 0.4}
+                                    <div class="circle unmarked"></div>
+                                {/if}
                             </div>
                         {/if}
                     {/each}
@@ -73,6 +91,15 @@
                     {#each dates[month] as day}
                         <div class="day">
                             {day.getDate()}
+                            {#if Math.random() < 0.4}
+                                    <div class="circle complete"></div>    
+                            {/if}
+                            {#if Math.random() < 0.4}
+                                <div class="circle incomplete"></div>
+                            {/if}
+                            {#if Math.random() < 0.4}
+                                <div class="circle unmarked"></div>
+                            {/if}
                         </div>
                     {/each}
                 {/if}
@@ -90,6 +117,7 @@
         width: 100%;
         height: fit-content;
         -webkit-font-smoothing: antialiased; /* For WebKit (Safari, Chrome) */
+        color: rgba($graphYellow, 0.8);
     }
 
     .months {
@@ -127,6 +155,7 @@
         height: fit-content;
         -webkit-font-smoothing: antialiased; /* For WebKit (Safari, Chrome) */
         margin-bottom: 25px;
+        color: rgba($graphYellow, 0.6);
     }
 
     .days {
@@ -164,7 +193,7 @@
         align-items: top;
         justify-content: center;
         background-color: $darkModeLight;
-        
+        position: relative;
         font-weight: 300;
         font-size: 12px;
         box-shadow: inset 0 0px 1px black;
@@ -173,5 +202,28 @@
     .day:hover {
         border: 1px solid grey;
         transform: translateY(-2px);
+    }
+
+    .circle {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 8px; /* Adjust as needed */
+    }
+
+    .circle.incomplete {
+        background-color: $graphRed;
+        left: 25%; /* Adjust as needed */
+    }
+
+    .circle.complete {
+        background-color: $graphGreen;
+        left: 50%; /* Adjust as needed */
+    }
+
+    .circle.unmarked {
+        background-color: $graphGrey;
+        left: 75%; /* Adjust as needed */
     }
 </style>

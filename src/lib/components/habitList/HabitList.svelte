@@ -6,7 +6,7 @@
     import { habitSystem } from "$lib/stores/habits";
     import type { Habit, HabitDir } from "$src/lib/types/habits";
     import HabitDropDown from "./HabitDropDown.svelte";
-    import { HABIT_LIST_WIDTH } from "$lib/constants";
+    import { HABIT_LIST_WIDTH, HABIT_LIST_MAX_WIDTH } from "$lib/constants";
     import AppIcon from "../other/AppIcon.svelte";
     import AddIcon from "$lib/icons/Add.svg?component";
 	import { onDestroy, onMount } from "svelte";
@@ -28,9 +28,11 @@
         if (dragging) {
             const dx = e.clientX - dragging.startX;
             dragging.startX = e.clientX;
-            if (listWidth + dx >= HABIT_LIST_WIDTH) {
+            if (listWidth + dx >= HABIT_LIST_WIDTH && listWidth + dx <= HABIT_LIST_MAX_WIDTH) {
                 listWidth += dx;
                 listStyle += dx;
+                console.log(listWidth);
+                
             }
         }
     }
