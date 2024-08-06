@@ -30,7 +30,7 @@
     }
 
     .active-true {
-        box-shadow: 0px 15px 10px -15px $graphRed;
+        box-shadow: 0px 15px 10px -15px;
         transform: translateY(-3px);
     }
 
