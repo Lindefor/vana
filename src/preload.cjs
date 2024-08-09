@@ -4,8 +4,18 @@ const path = require('path');
 contextBridge.exposeInMainWorld('electron', {
   getPathSeparator: () => path.sep,
   getFilesRoot: () => ipcRenderer.invoke('get-files-root'),
+  generateHash: (...params) => {
+    return new Promise((resolve, reject) => {
+      ipcRenderer.invoke('generate-hash', params)
+      .then(hash => resolve(hash))
+      .catch(error => reject(error));
+    });
+  },
   readHabits: () => { //readFiles
     ipcRenderer.send('load-habits'); //load-files
+  },
+  updateHabits: (habitDir, dirID) => {
+    ipcRenderer.send('update-habits', habitDir, dirID)
   },
   readFromPath: (pathToDir, file) => {
     ipcRenderer.send('load-from-path', pathToDir, file);
