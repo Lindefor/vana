@@ -31,6 +31,7 @@
     let fontColor = Chart.defaults.color;
     
     let displayedHabits: Habit[] = [];
+    let habitCategories: Record<string, string> = {};
     let disabledItems: number[] = [];
     import { afterUpdate, onMount } from 'svelte';
     import { fade } from 'svelte/transition';
@@ -57,6 +58,7 @@
         h.habits.forEach(habit => {
             if (!habit.completed) {
                 smallHabs.push(habit);
+                habitCategories[habit.name] = h.name;
                 let date = new Date(habit.deadline);
                 weeklyData["Incompleted"][date.getDay()]++
                 doughnutSet["datapoints"][1]++
@@ -113,7 +115,7 @@
     $: updateHabits($habitSystem, false);
 
     function toggleHabitCompleted(habit: Habit) {
-        habitSystem.toggleHabitCompleted(habit);
+        habitSystem.toggleHabitCompleted(habit, habitCategories[habit.name]);
     }
 
     onMount(() => {
