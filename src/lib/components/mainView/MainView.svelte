@@ -18,6 +18,7 @@
 	let habitMenuMounted: boolean = false;
 	export let habit: Habit;
 	export let category: string;
+	export let newHabit: boolean;
 </script>
 
 <div class="mainView">
@@ -35,7 +36,7 @@
 		<div class={habitMenuOpen ? "blurred":""}><Graph/></div>
         {/if}
 		{#if habitMenuOpen || habitMenuMounted}
-			<div class="habit-menu-container"><HabitMenu bind:isOpen={habitMenuOpen} bind:mounted={habitMenuMounted} bind:habit={habit} bind:category={category}/></div>
+			<div class="habit-menu-container"><HabitMenu bind:isOpen={habitMenuOpen} bind:mounted={habitMenuMounted} bind:habit={habit} bind:category={category} bind:newHabit={newHabit}/></div>
 		{/if}
     </div>
 </div>

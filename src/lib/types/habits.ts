@@ -19,12 +19,13 @@ export class Habit implements Habit {
 		this.initializeId();
     }
 
-    private async initializeId() {
+    public async initializeId() {
         this.id = await this.generateId(this.name, this.completed, this.description, this.deadline);
     }
 
     private async generateId(name: string, completed: boolean, description: string, deadline: string): Promise<string> {
-		const hash = await window.electron.generateHash(name, completed, description, deadline);
+		const today = new Date().getTime();
+		const hash = await window.electron.generateHash(name, completed, description, deadline, today);
         return hash;
     }
 }

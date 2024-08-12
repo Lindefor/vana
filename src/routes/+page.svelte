@@ -7,11 +7,13 @@
     let newHabit = false;
     let habit: Habit;
     let category: string;
+    let createHabit = false;
 
     function modifyHabits(event: CustomEvent) {
         habit = event.detail.habit;
         category = event.detail.category;
-        newHabit = true;
+        newHabit = event.detail.new;
+        createHabit = true;
     }
 </script>
 
@@ -24,7 +26,7 @@
     <div class="mainWrapper">
         <LeftBar />
         <HabitList minimize={minimize} on:createHabit={(event) => (modifyHabits(event))}/>
-        <MiddleView bind:minimizeLeftbar={minimize} bind:habitMenuOpen={newHabit} bind:habit={habit} bind:category={category}/>
+        <MiddleView bind:minimizeLeftbar={minimize} bind:habitMenuOpen={createHabit} bind:habit={habit} bind:category={category} bind:newHabit={newHabit}/>
     </div>    
 </div>
 

@@ -16,7 +16,7 @@
 	let inCompleted: boolean = false;
 	let noStatus: boolean = false;
 	export let habit: Habit;
-	let newHabit: boolean;
+	export let newHabit: boolean;
 	let nameSet: boolean = true;
 	let categorySet: boolean = true;
 	export let category: string;
@@ -58,14 +58,12 @@
 		});
 	}
 	
-	onMount(async () => {
-		mounted = true;
-		
-		if (!habit.name) {
-			newHabit = true;
-		} else {
-			newHabit = false;
-		}
+	function initMenu() {
+		isOpen = true;
+		completed = false;
+		inCompleted = false;
+		noStatus = false;
+		fullCategory = [""];
 		
 		switch (habit.completed) {
 			case true:
@@ -85,7 +83,7 @@
 		day = date.getDate();
 		dayDisplay = day;
 		dayOfWeek = date.getDay();
-		month = date.getMonth();
+		month = date.getMonth()+1;
 		monthDisplay = month;
 		year = date.getFullYear();
 		yearDisplay = year;
@@ -95,14 +93,21 @@
 		}
 
 		setTimeout(() => {
-			availableCategories[""] = ["No category"]
-			$habitSystem.subDirs.forEach(subDir => {
-				loadCategories("", subDir);
-			});
+			if (Object.entries(availableCategories).length===0) {
+				availableCategories[""] = ["No category"]
+				$habitSystem.subDirs.forEach(subDir => {
+					loadCategories("", subDir);
+				});
+			}
 		}, 100);
+	}
 
+	onMount(async () => {
+		mounted = true;
+		initMenu();
 	});
 	
+	$: habit.id, initMenu()
 
 	function closePopup() {
 		
@@ -195,7 +200,8 @@
 		}
 	}
 
-	function saveHabit() {
+
+	async function saveHabit() {
 		habit.completed = completed;
 		habit.deadline = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 		
@@ -218,8 +224,12 @@
           	}, 0);
 			return;
 		}
-		let habitToAdd = new Habit(habit.name, habit.completed, habit.description, habit.deadline);
 		
+		
+		
+		let habitToAdd = new Habit(habit.name, habit.completed, habit.description, habit.deadline);
+		await habitToAdd.initializeId();
+		habitToAdd.id = habit.id;
 		if (newHabit) {
 			habitSystem.addHabit(habitToAdd, category);
 		} else {
@@ -246,7 +256,7 @@
 	<div class="backdrop" on:click={closePopup} class:isOpen></div>
 	<div class="popup-container {isClosed ? 'fade-out' : 'fade-in'}">
 		<div class="habit-attributes">
-			<h1>{(habit && habit.name) || 'New Habit (newName + check valid)'}</h1>
+			<h1>{(habit && habit.name) || 'New Habit (duplicates)'}</h1>
 			<div class="habit-attribute {!nameSet ? "error":""}">
 				<div class="habit-type set-{habit.name !== ""}">Name:</div>
 				<input
@@ -466,7 +476,8 @@
 	.popup-container {
 		position: relative;
 		width: 600px;
-		height: 900px;
+		height: 700px;
+		overflow: scroll;
 		background-color: $darkModeDark;
 		border: 1px solid $darkModeLight;
 		border-radius: 10px;
@@ -532,6 +543,7 @@
 
 	.habit-attributes {
 		display: flex;
+		height: 100%;
 		flex-direction: column;
 		gap: 30px;
 		position: relative;
@@ -656,12 +668,13 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		height: 150px;
+		// height: 150px;
 		width: 335px;
 		position: relative;
 		border: 2px solid $darkModeLight;
 		border-radius: 6px;
 		padding-top: 10px;
+		padding-bottom: 10px;
 		justify-content: center;
 		align-items: center;
 	}

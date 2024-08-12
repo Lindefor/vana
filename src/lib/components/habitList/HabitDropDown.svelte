@@ -76,7 +76,7 @@
     <AppIcon class="dropDown" inactiveIcon={DropClosed} activeIcon={DropOpened} text={habitDir.name} bind:active={activeDirs[habitDir.id]}/>
     {#if activeDirs[habitDir.id]}
         <div class="habitDir">
-            <div class="dirContainer" in:fade={{ duration: 1000, delay: index*400 }}>
+            <div class="dirContainer" in:fade={{ duration: 1000, delay: 100 }}>
                 <HabitDropDown habitSystem={habitDir} on:toggleHabit={(event) => {selfUpdate(event)}} on:editHabit={(event) => {selfEdit(event)}}/>
             </div>
         </div>
@@ -84,7 +84,7 @@
 {/each}
 {#each sortedHabits as habit, index (habit.id)}
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="habit" in:fade={{ duration: 1000, delay: index*400 }} animate:flip={{ duration: 300 }} on:mouseenter={() => (hoverHabit[habit.name] = true)} on:mouseleave={() => (hoverHabit[habit.name] = false)}>
+    <div class="habit" in:fade={{ duration: 1000, delay: 100 }} animate:flip={{ duration: 300 }} on:mouseenter={() => (hoverHabit[habit.name] = true)} on:mouseleave={() => (hoverHabit[habit.name] = false)}>
         <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit.name} active={habit.completed} on:toggle={(event) => updateHabit(event, habit)}/>
         {#if hoverHabit[habit.name]}
             <div in:fade={{ duration: 200 }} out:fade={{ duration: 200 }}><AppIcon class="habitCheck" inactiveIcon={Edit} activeIcon={Edit} text="" active={false} on:toggle={() => editHabit(habit)}/></div>
