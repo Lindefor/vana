@@ -45,7 +45,8 @@
 	.mainView {
 		display: flex;
 		flex-direction: column;
-		width: 600px;
+		width: 100%;
+		height: 100%;
 		background-color: $darkModeLight;
 		margin-top: -29px;
 		flex: 1;
@@ -80,6 +81,7 @@
 		filter: blur(10px);
 		background: rgba($darkModeDark, 0.5);
 	}
+
 
 	.habit-menu-container {
 		position: absolute;

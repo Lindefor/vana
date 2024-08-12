@@ -253,6 +253,8 @@
 </script>
 
 {#if isOpen}
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div class="backdrop" on:click={closePopup} class:isOpen></div>
 	<div class="popup-container {isClosed ? 'fade-out' : 'fade-in'}">
 		<div class="habit-attributes">
@@ -869,7 +871,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		z-index: 999;
+		z-index: 40;
 		display: flex;
 		justify-content: center;
 		align-items: center;
