@@ -15,13 +15,15 @@
     import Marked from '$lib/icons/Marked.svg?component';
     import DropClosed from '$lib/icons/DropClosed.svg?component';
     import DropOpened from '$lib/icons/DropOpened.svg?component';
+    import Edit from '$lib/icons/Edit.svg?component';
     import { habitSystem as h} from "$src/lib/stores/habits";
     import { createEventDispatcher } from 'svelte';
 
 	
     const dispather = createEventDispatcher();
     export let habitSystem: HabitDir;
-    let activeDirs: Record<string,boolean> = {}
+    let activeDirs: Record<string, boolean> = {}
+    let hoverHabit: Record<string, boolean> = {}
     let sortedHabits: Habit[] = [];
     let randomNumber = Math.floor(Math.random() * 100);
     
@@ -42,12 +44,27 @@
     }
 
     function updateHabit(event: CustomEvent, habit: Habit) {
-        dispather('toggleHabit', { habit })
+        let category = habitSystem.name === "root" ? "No Category": habitSystem.name;
+        dispather('toggleHabit', { habit, category })
     }
 
-    function selfToggle(event: CustomEvent) {
+    function selfUpdate(event: CustomEvent) {
         let habit = event.detail.habit;
-        dispather('toggleHabit', { habit })
+        let category = event.detail.category;
+        dispather('toggleHabit', { habit, category })
+    }
+
+    function selfEdit(event: CustomEvent) {
+        let habit = event.detail.habit;
+        let category = event.detail.category;
+        
+        dispather('editHabit',  {habit, category})
+    }
+
+    function editHabit(habit: Habit) {
+        let category = habitSystem.name === "root" ? "No Category": habitSystem.name;
+        hoverHabit[habit.name] = false;
+        dispather('editHabit', { habit, category })
     }
 
 
@@ -59,16 +76,19 @@
     <AppIcon class="dropDown" inactiveIcon={DropClosed} activeIcon={DropOpened} text={habitDir.name} bind:active={activeDirs[habitDir.id]}/>
     {#if activeDirs[habitDir.id]}
         <div class="habitDir">
-            <div class="dirContainer" in:fade={{ duration: 1000, delay: index*400 }}>
-                <HabitDropDown habitSystem={habitDir} on:toggleHabit={(event) => {selfToggle(event)}}/>
+            <div class="dirContainer" in:fade={{ duration: 1000, delay: 100 }}>
+                <HabitDropDown habitSystem={habitDir} on:toggleHabit={(event) => {selfUpdate(event)}} on:editHabit={(event) => {selfEdit(event)}}/>
             </div>
         </div>
     {/if}
 {/each}
 {#each sortedHabits as habit, index (habit.id)}
-    <div class="habit" in:fade={{ duration: 1000, delay: index*400 }} animate:flip={{ duration: 300 }}>
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="habit" in:fade={{ duration: 1000, delay: 100 }} animate:flip={{ duration: 300 }} on:mouseenter={() => (hoverHabit[habit.name] = true)} on:mouseleave={() => (hoverHabit[habit.name] = false)}>
         <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit.name} active={habit.completed} on:toggle={(event) => updateHabit(event, habit)}/>
-        <button on:click={h.logAllCompleted}>HoverToMod</button>
+        {#if hoverHabit[habit.name]}
+            <div in:fade={{ duration: 200 }} out:fade={{ duration: 200 }}><AppIcon class="habitCheck" inactiveIcon={Edit} activeIcon={Edit} text="" active={false} on:toggle={() => editHabit(habit)}/></div>
+        {/if}
     </div>
 {/each}
 </div>
@@ -87,6 +107,7 @@
         border-left: 1px dashed $graphGreen;
     }
     .habit {
+        display: flex;
         padding: 10px;
         margin-left: -24px;
     }

@@ -91,9 +91,25 @@
         background: none;
         border: none;
         transition: all 0.3s ease-in-out;
+        cursor: pointer;
     }
 
     .habitCheck:hover {
+        transform: scale(1.07);
+        opacity: 50%;
+    }
+
+    .back {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        width: 5px;
+    }
+
+    .back:hover {
         transform: scale(1.07);
         opacity: 50%;
     }
@@ -109,4 +125,17 @@
         transition: all 0.3s ease-in-out;
     }
 
+    .popup-close {
+        background: none;
+        border: none;
+        position: absolute;
+        right: 2px;
+        top: 3px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .popup-close:hover {
+        transform: scale(1.07);
+        opacity: 80%;
+    }
 </style>

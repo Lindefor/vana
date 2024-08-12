@@ -5,16 +5,18 @@
 <script lang="ts">
     import { habitSystem } from "$lib/stores/habits";
     import type { Habit, HabitDir } from "$src/lib/types/habits";
+    import { Habit as H } from "$src/lib/types/habits";
     import HabitDropDown from "./HabitDropDown.svelte";
     import { HABIT_LIST_WIDTH, HABIT_LIST_MAX_WIDTH } from "$lib/constants";
     import AppIcon from "../other/AppIcon.svelte";
     import AddIcon from "$lib/icons/Add.svg?component";
-	import { onDestroy, onMount } from "svelte";
+	import { onMount, createEventDispatcher } from "svelte";
 
     let dragging: { startX: any; } | null = null;
     let listWidth = HABIT_LIST_WIDTH;
     export let minimize = false;
     let searchFilter: string = "";
+    const dispatch = createEventDispatcher();
 
     function startDrag(e: MouseEvent) {
         dragging = {startX: e.clientX};
@@ -31,8 +33,6 @@
             if (listWidth + dx >= HABIT_LIST_WIDTH && listWidth + dx <= HABIT_LIST_MAX_WIDTH) {
                 listWidth += dx;
                 listStyle += dx;
-                console.log(listWidth);
-                
             }
         }
     }
@@ -50,14 +50,11 @@
 
     //     hs = get(habitSystem);
     //     if (searchFilter === "") {
-    //         console.log("YE");
     //         console.log($habitSystem);
             
     //         return $habitSystem;
     //     }
     //     else {
-    //         console.log("NOPE");
-    //         console.log(hs);
             
             
     //         return filterHabits(hs);
@@ -86,7 +83,19 @@
     //         window.removeEventListener('mouseup', stopDrag);
     // })  
     function toggleHabitCompleted(event: CustomEvent) {
-        habitSystem.toggleHabitCompleted(event.detail.habit);
+        habitSystem.toggleHabitCompleted(event.detail.habit, event.detail.category);
+    }
+
+    function newHabit() {
+        let habit = new H('', false, '', '');
+        let category = "";
+        dispatch('createHabit', { habit, category, new: true });
+    }
+
+    function editHabit(event: CustomEvent) {
+        let habit = event.detail.habit;
+        let category = event.detail.category;
+        dispatch('createHabit', { habit, category, new: false});
     }
     
     
@@ -95,9 +104,9 @@
 <div class="list" style="width:{listStyle}px;">
     <div class="habitContainer" style="width:{listWidth}px;">
         
-        <div class="search"><AppIcon class="add" inactiveIcon={AddIcon} activeIcon={AddIcon} text=""/><input class="search-text" spellcheck="false" bind:value={searchFilter} placeholder="Search" on:input={handleSearchFilterChange}/></div>
+        <div class="search"><AppIcon class="add" inactiveIcon={AddIcon} activeIcon={AddIcon} text="" on:toggle={newHabit}/><input class="search-text" spellcheck="false" bind:value={searchFilter} placeholder="Search" on:input={handleSearchFilterChange}/></div>
         <div class="habits">
-            <HabitDropDown habitSystem={$habitSystem} on:toggleHabit={(event) => {toggleHabitCompleted(event)}}/>
+            <HabitDropDown habitSystem={$habitSystem} on:toggleHabit={(event) => {toggleHabitCompleted(event)}} on:editHabit={(event) => {editHabit(event)}}/>
         </div> 
     </div>
     <div class="divider" role="button" tabindex="0" aria-label="Adjust Habit List size" on:mousedown={(e) => startDrag(e)}></div>
@@ -149,6 +158,23 @@
         height: calc(100vh - 25px);
         overflow-y: scroll;
         
+    }
+
+    ::-webkit-scrollbar {
+    width: 5px; 
+    height: 8px; 
+}
+    ::-webkit-scrollbar-track {
+    background-color: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+    background-color: $darkModeLight; 
+    border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-corner {
+    background: transparent;
     }
     
     .habit {

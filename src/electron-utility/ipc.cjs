@@ -1,7 +1,7 @@
 const {app, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
-const { readHabits, readHabit } = require("./helpers.cjs")
+const { readHabits, readHabit, generateHash, updateHabits } = require("./helpers.cjs")
 
 const HABITS_DIR_PATH = 'habits' // Path relative to app.getPath('userData')
 
@@ -20,6 +20,14 @@ function initIPC(mainwindow) {
         readHabits(pathToElement, mainwindow);
       });
     });
+  });
+
+  ipcMain.on('update-habits', (_, habitdir, dirID) => {
+    updateHabits(habitdir, dirID);
+  });
+
+  ipcMain.handle('generate-hash', (...params) => {
+    return generateHash(params)
   });
   
   ipcMain.on('load-from-path', (_, pathToDir, file) => {

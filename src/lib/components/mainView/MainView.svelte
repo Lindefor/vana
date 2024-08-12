@@ -9,9 +9,16 @@
 	import NavBar from './navBar.svelte';
     import Calendar from './Calendar.svelte';
     import Graph from './Graph/Graph.svelte';
+	import HabitMenu from '../HabitMenu.svelte';
     import { shortcutStore } from '$src/lib/stores/shortcut';
+	import type { Habit } from '$src/lib/types/habits';
 	export let minimizeLeftbar = false;
     $: activeView = $shortcutStore.navBarActive
+	export let habitMenuOpen: boolean = false;
+	let habitMenuMounted: boolean = false;
+	export let habit: Habit;
+	export let category: string;
+	export let newHabit: boolean;
 </script>
 
 <div class="mainView">
@@ -24,10 +31,13 @@
 	</div>
 	<div class="content">
         {#if activeView === 0}
-            <Calendar/>
+            <div class={habitMenuOpen ? "blurred":""}><Calendar/></div>
         {:else if activeView === 1}
-            <Graph/>
+		<div class={habitMenuOpen ? "blurred":""}><Graph/></div>
         {/if}
+		{#if habitMenuOpen || habitMenuMounted}
+			<div class="habit-menu-container"><HabitMenu bind:isOpen={habitMenuOpen} bind:mounted={habitMenuMounted} bind:habit={habit} bind:category={category} bind:newHabit={newHabit}/></div>
+		{/if}
     </div>
 </div>
 
@@ -58,11 +68,23 @@
 	}
 
 	.content {
-        height: calc(100vh - 200px);
+        height: calc(100vh - 210px);
         overflow-y: scroll;
         padding: 20px;
 	}
     .content::-webkit-scrollbar {
         display: none;
     }   
+
+	.blurred {
+		filter: blur(10px);
+		background: rgba($darkModeDark, 0.5);
+	}
+
+	.habit-menu-container {
+		position: absolute;
+		top: 20%;
+		left: 40%;
+		z-index: 1000;
+	}
 </style>

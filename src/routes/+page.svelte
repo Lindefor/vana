@@ -2,7 +2,19 @@
     import LeftBar from "$lib/components/leftBar/LeftBar.svelte";
     import HabitList from "$lib/components/habitList/HabitList.svelte";
     import MiddleView from "$lib/components/mainView/MainView.svelte";
+	import type { Habit } from "$src/lib/types/habits";
     let minimize = false;
+    let newHabit = false;
+    let habit: Habit;
+    let category: string;
+    let createHabit = false;
+
+    function modifyHabits(event: CustomEvent) {
+        habit = event.detail.habit;
+        category = event.detail.category;
+        newHabit = event.detail.new;
+        createHabit = true;
+    }
 </script>
 
 <svelte:head>
@@ -13,18 +25,23 @@
     <div class="topBar"></div>
     <div class="mainWrapper">
         <LeftBar />
-        <HabitList minimize={minimize}/>
-        <MiddleView bind:minimizeLeftbar={minimize}/>
+        <HabitList minimize={minimize} on:createHabit={(event) => (modifyHabits(event))}/>
+        <MiddleView bind:minimizeLeftbar={minimize} bind:habitMenuOpen={createHabit} bind:habit={habit} bind:category={category} bind:newHabit={newHabit}/>
     </div>    
 </div>
 
 
 
 <style lang="scss">
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
 
     .wrapper {
         display: flex;
         flex-direction: column;
+        height: 100%;
     }
 
     .topBar {
@@ -43,6 +60,8 @@
     .mainWrapper {
         display: flex;
         flex-direction: row;
+        flex-grow: 1;
+        position: relative;
     }
 
     :global(body) {
