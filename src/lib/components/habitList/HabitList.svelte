@@ -157,7 +157,7 @@
         flex-direction: column;
         height: calc(100vh - 25px);
         overflow-y: scroll;
-        
+        padding-left: 25px;
     }
 
     ::-webkit-scrollbar {

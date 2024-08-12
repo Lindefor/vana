@@ -24,9 +24,9 @@
 <div class="wrapper">
     <div class="topBar"></div>
     <div class="mainWrapper">
-        <LeftBar />
-        <HabitList minimize={minimize} on:createHabit={(event) => (modifyHabits(event))}/>
-        <MiddleView bind:minimizeLeftbar={minimize} bind:habitMenuOpen={createHabit} bind:habit={habit} bind:category={category} bind:newHabit={newHabit}/>
+        <div class="sidebar"><LeftBar /></div>
+        <div class="sidebar"><HabitList minimize={minimize} on:createHabit={(event) => (modifyHabits(event))}/></div>
+        <div class="middle-wrapper"><MiddleView bind:minimizeLeftbar={minimize} bind:habitMenuOpen={createHabit} bind:habit={habit} bind:category={category} bind:newHabit={newHabit}/></div>
     </div>    
 </div>
 
@@ -73,4 +73,14 @@
         -webkit-font-smoothing: antialiased;
         user-select: none;
 	}
+
+    .sidebar {
+        position: relative;
+        z-index: 10002;
+    }
+
+    .middle-wrapper {
+        width: 100%;
+        height: 100%;
+    }
 </style>
