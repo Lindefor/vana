@@ -202,6 +202,11 @@
 
 
 	async function saveHabit() {
+		if (((habit.completed || newHabit) && !completed)) {
+			habitSystem.notifySubscribers(category, habit.deadline, -1);
+		} else if ((!habit.completed || newHabit) && completed) {
+			habitSystem.notifySubscribers(category, habit.deadline, 1);
+		} 
 		habit.completed = completed;
 		habit.deadline = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 		
