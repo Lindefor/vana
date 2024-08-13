@@ -33,7 +33,23 @@ const buildHabitStore = () => {
 
 	const { subscribe, set, update } = writable(startState);
 
+	const subscribers = new Map();
+
+    
+
+    function notify(id: string, data: any) {
+        if (subscribers.has(id)) {
+            subscribers.get(id)(data);
+        }
+    }
+
 	const methods = {
+		register(id: string, callback: any) {
+			subscribers.set(id, callback);
+		},
+		unregister(id: string) {
+			subscribers.delete(id);
+		},
 		loadHabitSystem(habitsData: Record<any,any>) {
 			set({id: 0, name: "root", subDirs: [], habits: []}); // Reset the store to initial state
 			update((habitSystem) => {
@@ -86,6 +102,9 @@ const buildHabitStore = () => {
 				return habitSystem;
 			})	
 		},
+		notifySubscribers(category: string, date: string, value: number) {
+			notify('habitComponent', { type: 'update', category: category, date: date, value: value });
+		},
 		logAllCompleted() {
 			update((habits) => {
 				helper(habits);
@@ -93,7 +112,8 @@ const buildHabitStore = () => {
 			})
 		},
 		toggleHabitCompleted(habit: Habit, category: string) {
-			
+			const value = habit.completed ? -1:1;
+			notify('habitComponent', { type: 'update', category: category, date: habit.deadline, value: value });
 			habit.completed = !habit.completed;
 			update((habits) => {
 				habits = {...habits};
