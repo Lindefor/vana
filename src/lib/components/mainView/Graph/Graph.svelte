@@ -45,11 +45,11 @@
         "labels": ["Completed", "Incompleted", "Unmarked"],
         "datapoints": [0, 0, 4]
     }
-    let data = {};
-    let options = {};
-    let doughnutData = {};
-    let doughnutOptions = {};
-    let centerTextPlugin = {};
+    let data: any = {};
+    let options: any = {};
+    let doughnutData: any = {};
+    let doughnutOptions: any = {};
+    let centerTextPlugin: any = {};
     
 
     function fillHabits(h: HabitDir) {
@@ -89,6 +89,7 @@
     }
 
     function updateHabits(hs: HabitDir, firstLoad: boolean) {
+        
         weeklyData = {
             "Completed": [0, 0, 0, 0, 0, 0, 0],
             "Incompleted": [0, 0, 0, 0, 0, 0, 0],
@@ -106,20 +107,37 @@
             }); 
         } else {
             habs.forEach((habit, index) => {
-            setTimeout(() => {
                 displayedHabits = sortHabits([...displayedHabits, habit]);
-            }, index * 400);
-        }); 
+            }); 
         }
     }
-    $: updateHabits($habitSystem, false);
-
+    updateHabits($habitSystem, false);
+    $: $habitSystem, console.log($habitSystem);
+    
+    
     function toggleHabitCompleted(habit: Habit) {
         habitSystem.toggleHabitCompleted(habit, habitCategories[habit.name]);
     }
 
+    function handleNotification(notificationData: any) {
+        let dayOfWeek = new Date(notificationData.date).getDay();
+        if (notificationData.value === 1) {
+            data.datasets[0].data[dayOfWeek]++;
+            data.datasets[1].data[dayOfWeek]--;
+            doughnutData.datasets[0].data[0]++;
+            doughnutData.datasets[0].data[1]--;
+        } else {
+            data.datasets[0].data[dayOfWeek]--;
+            data.datasets[1].data[dayOfWeek]++;
+            doughnutData.datasets[0].data[0]--;
+            doughnutData.datasets[0].data[1]++;
+        }
+        // console.log(data);
+    }
+
     onMount(() => {
         updateHabits($habitSystem, true)
+        habitSystem.register('habitComponent', handleNotification);
     })
 
     afterUpdate(() => {
@@ -133,7 +151,7 @@
     $: doughnutOptions = doughnut(doughnutSet["labels"], doughnutSet["datapoints"], disabledItems)[1];
     $: centerTextPlugin = doughnut(doughnutSet["labels"], doughnutSet["datapoints"], disabledItems)[2];
 
-    
+
     ChartJS.register(
     Title,
     Tooltip,
@@ -169,7 +187,7 @@
         </div>
     </div>
     <div class="item {containerSize <= 1030 ? "full-width":"half-width"}">
-        <Line {data} options={options} updateMode="none"/>
+        <Line {data} options={options}/>
     </div>
     <div class="non-item {containerSize <= 1300 ? "full-width":"half-width"}">
         <AppIcon class="largeAdd" inactiveIcon={Add} activeIcon={Add} text="Add new graph"/>

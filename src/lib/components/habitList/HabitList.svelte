@@ -183,6 +183,8 @@
     }
 
     .divider {
+        position: absolute;
+        right: 0;
         cursor: ew-resize;
         width: 2px;
         border-right: 1px solid black;
