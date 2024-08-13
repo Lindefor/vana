@@ -75,6 +75,22 @@
         return smallHabs;
     }
 
+    function updateUnmarkedHabits(h: HabitDir) {
+        let smallHabs: Habit[] = [];
+        
+        h.habits.forEach(habit => {
+            if (!habit.completed) {
+                smallHabs.push(habit);
+                habitCategories[habit.name] = h.name;
+            } 
+        });
+        h.subDirs.forEach(subdir => {
+            smallHabs = smallHabs.concat(updateUnmarkedHabits(subdir));
+        });
+        
+        return smallHabs;
+    }
+
     function sortHabits(habits: Habit[]) {
         let sortedHabits = Object.values(habits ?? []).sort((a, b) => {
         if (a.completed === false && b.completed === true) {
@@ -88,7 +104,7 @@
         return sortedHabits;
     }
 
-    function updateHabits(hs: HabitDir, firstLoad: boolean) {
+    function loadHabits(hs: HabitDir, firstLoad: boolean) {
         
         weeklyData = {
             "Completed": [0, 0, 0, 0, 0, 0, 0],
@@ -111,8 +127,20 @@
             }); 
         }
     }
-    updateHabits($habitSystem, false);
-    $: $habitSystem, console.log($habitSystem);
+
+    function updateHabits(hs: HabitDir, firstLoad: boolean) {
+        let habs = updateUnmarkedHabits(hs);
+        displayedHabits = [];
+        if (!firstLoad) {
+            habs.forEach((habit, index) => {
+                displayedHabits = sortHabits([...displayedHabits, habit]);
+            }); 
+        } else {
+            habs.forEach((habit, index) => {
+                displayedHabits = sortHabits([...displayedHabits, habit]);
+            }); 
+        }
+    }
     
     
     function toggleHabitCompleted(habit: Habit) {
@@ -122,21 +150,21 @@
     function handleNotification(notificationData: any) {
         let dayOfWeek = new Date(notificationData.date).getDay();
         if (notificationData.value === 1) {
-            data.datasets[0].data[dayOfWeek]++;
-            data.datasets[1].data[dayOfWeek]--;
-            doughnutData.datasets[0].data[0]++;
-            doughnutData.datasets[0].data[1]--;
+            data.datasets[0].data[dayOfWeek] += 1;
+            data.datasets[1].data[dayOfWeek] -= 1;
+            doughnutData.datasets[0].data[0] += 1;
+            doughnutData.datasets[0].data[1] -= 1;
         } else {
-            data.datasets[0].data[dayOfWeek]--;
-            data.datasets[1].data[dayOfWeek]++;
-            doughnutData.datasets[0].data[0]--;
-            doughnutData.datasets[0].data[1]++;
+            data.datasets[0].data[dayOfWeek] -= 1;
+            data.datasets[1].data[dayOfWeek] += 1;
+            doughnutData.datasets[0].data[0] -= 1;
+            doughnutData.datasets[0].data[1] += 1;
         }
         // console.log(data);
     }
 
     onMount(() => {
-        updateHabits($habitSystem, true)
+        loadHabits($habitSystem, true)
         habitSystem.register('habitComponent', handleNotification);
     })
 
@@ -150,6 +178,8 @@
     $: doughnutData = doughnut(doughnutSet["labels"], doughnutSet["datapoints"], disabledItems)[0];
     $: doughnutOptions = doughnut(doughnutSet["labels"], doughnutSet["datapoints"], disabledItems)[1];
     $: centerTextPlugin = doughnut(doughnutSet["labels"], doughnutSet["datapoints"], disabledItems)[2];
+    loadHabits($habitSystem, false);
+    $: updateHabits($habitSystem, false);
 
 
     ChartJS.register(
@@ -174,16 +204,18 @@
     </div>
     <div class="item half-width">
         <h3 style="color:{fontColor};font-family:{Chart.defaults.font.family};">Unmarked Habits</h3>
-        <div class="habits" style="color:{fontColor};{displayedHabits.length>0 ? "":"align-items:center;"}">
-            {#if displayedHabits.length > 0}
-                {#each displayedHabits as habit (habit.id)}
-                    <div in:fade={{duration: 300}} animate:flip={{ duration: 300 }} class="habit">
-                        <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit.name} active={habit.completed} on:toggle={() => toggleHabitCompleted(habit)}/>
-                    </div>
-                {/each}
-            {:else}
-                All habits completed, well done!
-            {/if}
+        <div class="habits-container">
+            <div class="habits" style="color:{fontColor};{displayedHabits.length>0 ? "":"align-items:center;"}">
+                {#if displayedHabits.length > 0}
+                    {#each displayedHabits as habit (habit.id)}
+                        <div in:fade={{duration: 300}} animate:flip={{ duration: 300 }} class="habit">
+                            <AppIcon class="habitCheck" inactiveIcon={Unmarked} activeIcon={Marked} text={habit.name} active={habit.completed} on:toggle={() => toggleHabitCompleted(habit)}/>
+                        </div>
+                    {/each}
+                {:else}
+                    All habits completed, well done!
+                {/if}
+            </div>
         </div>
     </div>
     <div class="item {containerSize <= 1030 ? "full-width":"half-width"}">
@@ -223,6 +255,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        position: relative;
         @include transition();
     }
 
@@ -274,20 +307,30 @@
         height: 10%;
     }
 
+    .habits-container {
+        height: 80%;
+        overflow: scroll;
+        width: 80%;
+    }
+
     .habits {
-        height: 90%;
+        position: relative;
+        height: fit-content;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        overflow: scroll;
         gap: 30px;
         user-select: none;
-        width: 80%;
+    }
+
+    .habit {
+        position: relative;
+        height: 100%;
     }
     ::-webkit-scrollbar {
     width: 5px; 
     height: 8px; 
-}
+    }
     ::-webkit-scrollbar-track {
     background-color: transparent;
     }
