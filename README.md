@@ -1,38 +1,65 @@
-# create-svelte
+# Vana
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+**Vana** is a pre-alpha application developed with **Electron** and **SvelteKit**. It aims to simplify habit tracking by offering a user-friendly interface that is both simple to use and powerful enough to cater to all users' needs.
 
-## Creating a project
+## Table of Contents
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [Features](#features)
+  - [Simple and Minimalistic Design](#simple-and-minimalistic-design)
+  - [Habit Management](#habit-management)
+  - [Graph View](#graph-view)
+  - [Calendar View](#calendar-view)
+  - [Easy Data Import](#easy-data-import)
+- [Continuous Integration](#continuous-integration)
+- [Current Focus](#current-focus)
+- [Future Focus](#future-focus)
+- [Feedback and Feature Requests](#feedback-and-feature-requests)
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Features
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+### Simple and Minimalistic Design
 
-## Developing
+Experience a clean and evolving design that keeps your attention on what truly matters—tracking your habits.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Habit Management
 
-```bash
-npm run dev
+- Easily create, modify, and categorize your habits.
+- Mark habits as complete, incomplete, or with no status.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+### Graph View
 
-## Building
+- Monitor your progress with real-time updating graphs.
+- Customize graphs based on datasets you choose.
 
-To create a production version of your app:
+### Calendar View
 
-```bash
-npm run build
-```
+- Get an overview of your habit statuses through the calendar.
+- Add habits to specific dates effortlessly.
+  - Set habits as one-time events, recurring, or assign custom dates via the create menu.
 
-You can preview the production build with `npm run preview`.
+### Easy Data Import
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Habits are stored locally on your file system.
+- Import habit structures from other users with just a click.
+
+## Continuous Integration
+
+All pull requests activate a webhook that sends a request to my custom Continuous Integration (CI) server. The server runs all tests and updates the PR status based on the results, ensuring code quality and reliability.
+
+## Current Focus
+
+- Enhancing the overall design.
+- Implementing the ability to add custom graphs for data visualization.
+- Introducing trend graphs to the graph view.
+
+## Future Focus
+
+- Figure out how machine learning can be used to approximate habit progress in the future.
+- Nice-to-have features such as using AI to create custom icons for custom views and graphs.
+- Account authentication.
+- Database storage of data.
+- More to come—currently focusing on the present 😉
+
+## Feedback and Feature Requests
+
+Your feedback is valuable! Feel free to submit feature requests through my [GitHub profile front page](#).
