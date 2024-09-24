@@ -62,4 +62,4 @@ All pull requests activate a webhook that sends a request to my custom Continuou
 
 ## Feedback and Feature Requests
 
-Your feedback is valuable! Feel free to submit feature requests through my [GitHub profile front page](#).
+Your feedback is valuable! Feel free to submit feature requests through my [GitHub profile front page](https://github.com/Lindefor).
